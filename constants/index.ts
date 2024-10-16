@@ -1,4 +1,4 @@
-import { TagTypes } from "@/types";
+import { ProjectType, TagTypes } from "@/types";
 
 export const tags: TagTypes[] = [
   {
@@ -33,7 +33,7 @@ export const tags: TagTypes[] = [
   },
 ];
 
-export const projects = [
+export const projects: ProjectType[] = [
   {
     id: 2,
     imageUrl: "/images/screenshot1.png",

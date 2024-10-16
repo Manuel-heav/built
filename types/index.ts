@@ -3,3 +3,15 @@ export interface TagTypes {
   title: string;
   url: string;
 }
+
+export interface ProjectType {
+  id: number;
+  imageUrl: string;
+  title: string;
+  tags: string[];
+  githubRepo: string;
+  liveDemo: string;
+  telegramChannel: string;
+  likes: number;
+  comments: number;
+}
