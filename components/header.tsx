@@ -24,7 +24,7 @@ const Header = () => {
           </div>
 
           {/* Sign In */}
-          <button className="bg-white px-4 py-2 text-black rounded-full text-sm hover:scale-105 duration-200 ease-in-out">
+          <button className="btn-primary">
             Post Your Project
           </button>
         </div>
