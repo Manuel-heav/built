@@ -1,7 +1,7 @@
 import React from 'react'
 import Container from './container'
 import { ChevronRightIcon } from '@heroicons/react/16/solid'
-import { Spotlight } from './ui/spotlight'
+import { Spotlight } from './ui/Spotlight'
     
 const Hero = () => {
   return (
