@@ -1,6 +1,6 @@
 import React from "react";
 import Container from "./container";
-import { LightBulbIcon, MagnifyingGlassIcon } from "@heroicons/react/16/solid";
+import { LightBulbIcon } from "@heroicons/react/16/solid";
 import Link from "next/link";
 import { GithubIcon } from "./icons/icons";
 

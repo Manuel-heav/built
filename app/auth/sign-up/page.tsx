@@ -37,7 +37,7 @@ export default function SignUp() {
     setLoading(true);
     const { name, email, password } = data;
 
-    const { data: res, error } = await authClient.signUp.email(
+    await authClient.signUp.email(
       {
         email,
         password,
