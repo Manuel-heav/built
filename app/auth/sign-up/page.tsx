@@ -1,36 +1,65 @@
 "use client";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Spinner } from "@/components/ui/spinner";
 import { authClient } from "@/lib/auth-client";
+import { LightBulbIcon } from "@heroicons/react/16/solid";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { GithubIcon } from "@/components/icons/icons";
+
+const signUpSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters long")
+    .max(20, "Password cannot be longer than 20 characters"),
+});
+
+type SignUpFormData = z.infer<typeof signUpSchema>;
 
 export default function SignUp() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [image, setImage] = useState<File | null>(null);
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
-  // Function to handle user sign-up
-  const signUp = async () => {
-    const { data, error } = await authClient.signUp.email(
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignUpFormData>({
+    resolver: zodResolver(signUpSchema),
+  });
+
+  const signUp = async (data: SignUpFormData) => {
+    setLoading(true);
+    const { name, email, password } = data;
+
+    const { data: res, error } = await authClient.signUp.email(
       {
         email,
         password,
         name,
       },
       {
-        onRequest: (ctx) => {
-          // Show loading
+        onRequest: () => {
+          setLoading(true);
         },
-        onSuccess: (ctx) => {
-          // Redirect to the dashboard
-          alert("Sign up successful");
-          window.location.href = "/dashboard"; // Redirect to dashboard
+        onSuccess: () => {
+          toast.success("Sign Up Successful");
+          router.push("/");
+          setLoading(false);
         },
         onError: (ctx) => {
-          alert(ctx.error.message);
+          toast.error(`Sign Up Failed: ${ctx.error.message}`);
+          setLoading(false);
         },
       }
     );
   };
+
   const signInWithGithub = async () => {
     await authClient.signIn.social({
       provider: "github",
@@ -39,71 +68,66 @@ export default function SignUp() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-4 text-center">Sign Up</h2>
-        <div className="mb-4">
-          <label
-            className="block text-sm font-medium text-gray-700 mb-1"
-            htmlFor="name"
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="flex flex-col items-center gap-5">
+        <LightBulbIcon className="h-12" />
+        <h1 className="text-2xl font-bold">Sign Up into Built</h1>
+      </div>
+      <div className="p-6 rounded-lg shadow-md w-96">
+        <form onSubmit={handleSubmit(signUp)}>
+          <div className="mb-4">
+            <input
+              type="text"
+              {...register("name")}
+              className="input-primary"
+              placeholder="Name"
+            />
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+            )}
+          </div>
+          <div className="mb-4">
+            <input
+              type="email"
+              {...register("email")}
+              className="input-primary"
+              placeholder="Email Address"
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.email.message}
+              </p>
+            )}
+          </div>
+          <div className="mb-4">
+            <input
+              type="password"
+              {...register("password")}
+              className="input-primary"
+              placeholder="Password"
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-white text-black py-2 rounded-md transition duration-1000 hover:shadow-[0_0_50px_15px_rgba(255,255,255,0.1),0_0_100px_40px_rgba(255,255,255,0.1)]"
           >
-            Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring focus:ring-blue-300"
-            placeholder="Enter your name"
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            className="block text-sm font-medium text-gray-700 mb-1"
-            htmlFor="email"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring focus:ring-blue-300"
-            placeholder="Enter your email"
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            className="block text-sm font-medium text-gray-700 mb-1"
-            htmlFor="password"
-          >
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring focus:ring-blue-300"
-            placeholder="Enter your password"
-          />
-        </div>
-        <button
-          onClick={signUp}
-          className="w-full bg-blue-600 text-white font-bold py-2 rounded-md hover:bg-blue-700 transition duration-200"
-        >
-          Sign Up
-        </button>
+            {loading ? <Spinner size="small" /> : "Sign Up"}
+          </button>
+        </form>
+
         <div className="mt-4 text-center">
           <span className="text-gray-600">or</span>
         </div>
         <button
           onClick={signInWithGithub}
-          className="w-full mt-4 bg-gray-600 text-white font-bold py-2 rounded-md hover:bg-gray-700 transition duration-200"
+          className="flex justify-center w-full mt-4 bg-gray-600 text-white font-bold py-2 rounded-md hover:bg-gray-700 transition duration-200"
         >
-          Sign In with GitHub
+          <GithubIcon />
         </button>
       </div>
     </div>

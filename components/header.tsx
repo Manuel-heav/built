@@ -1,11 +1,12 @@
 import React from "react";
 import Container from "./container";
 import { LightBulbIcon, MagnifyingGlassIcon } from "@heroicons/react/16/solid";
+import Link from "next/link";
+import { GithubIcon } from "./icons/icons";
 
 const Header = () => {
   return (
-    <div className="border-b-[#1b1b1d] border-b-2 py-4">
-      {/* Logo */}
+    <div className="sticky top-0 z-50 py-4 backdrop-filter backdrop-blur-lg">
       <Container>
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-1">
@@ -13,20 +14,19 @@ const Header = () => {
             <h1 className="text-2xl font-bold">Built</h1>
           </div>
 
-          {/* Search Bar */}
-          <div className="flex items-center gap-2 border-2 border-[#1b1b1d] rounded-md px-2 py-1 mt-2 focus-within:border-white transition-colors duration-200">
-            <MagnifyingGlassIcon className="h-5" />
-            <input
-              type="text"
-              placeholder="Search for projects"
-              className="bg-transparent text-[#f0f0f0] focus:outline-none text-sm"
-            />
+          <div className="flex items-center gap-5">
+            <Link href="/auth/sign-up">
+              <button className="btn-primary">Post Your Project</button>
+            </Link>
+            <Link
+              className="flex gap-2 items-center border px-4 py-2 rounded-full cursor-pointer"
+              href="https://github.com/Manuel-heav/built"
+              target="_blank"
+            >
+              <GithubIcon />
+              <p>Star</p>
+            </Link>
           </div>
-
-          {/* Sign In */}
-          <button className="btn-primary">
-            Post Your Project
-          </button>
         </div>
       </Container>
     </div>
