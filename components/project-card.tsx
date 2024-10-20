@@ -27,7 +27,7 @@ const ProjectCard = ({
     return description;
   };
   return (
-    <div className="hover:scale-105 hover:shadow-2xl hover:bg-[#24242a] pb-4 rounded-lg duration-200 ">
+    <div className="hover:scale-105 hover:shadow-2xl hover:bg-gradient-to-r hover:from-[#24242a] hover:to-[#33333b] pb-4 rounded-lg duration-200">
       <div>
         <Image
           className="cursor-pointer border border-gray-800 rounded-sm"
