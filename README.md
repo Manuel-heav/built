@@ -9,3 +9,4 @@
 - [ ] Add Real-time Search
 - [ ] Do details page for each project
 - [ ] Polish UI and Code
+- [ ] Responsiveness
