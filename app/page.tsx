@@ -8,7 +8,7 @@ import { authClient } from "@/lib/auth-client";
 import React from "react";
 
 const Home = () => {
-  const { data: session, isPending, error } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
   console.log("Session", session);
 
   if (isPending) {

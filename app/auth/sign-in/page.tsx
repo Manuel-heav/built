@@ -134,7 +134,7 @@ export default function SignIn() {
           </button>
           <Link href="/auth/sign-up">
             <button className="text-sm mt-8 w-full bg-transparent py-2 rounded-md transition duration-500 border text-gray-400 border-gray-400 hover:border-white hover:text-white">
-              Don't have an account? Sign Up
+              Don&apos;t have an account? Sign Up
             </button>
           </Link>
         </form>

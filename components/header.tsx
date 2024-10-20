@@ -9,7 +9,7 @@ import { LogOutIcon } from "lucide-react";
 import { Spinner } from "./ui/spinner";
 
 const Header = () => {
-  const { data: session, isPending, error } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
   console.log("Session", session);
 
   const handleSignOut = async () => {
