@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 interface ContainerProps {
   children: React.ReactNode;
@@ -7,11 +7,9 @@ interface ContainerProps {
 const Container: React.FC<ContainerProps> = ({ children }) => {
   return (
     <div className="flex justify-center">
-        <div className="w-full max-w-6xl px-4">
-          {children}
-        </div>
+      <div className="w-full max-w-5xl px-4">{children}</div>
     </div>
-  )
-}
+  );
+};
 
-export default Container
+export default Container;

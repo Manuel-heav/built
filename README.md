@@ -1,7 +1,7 @@
 ## Remaining Tasks
 
-- [ ] Integrate Google Auth
-- [ ] Fix Card UI
+- [x] Integrate Google Auth
+- [x] Fix Card UI
 - [ ] Add loading screen to Auth functionalities
 - [ ] Set up Hono
 - [ ] Set Up Database and Backend for Project and likes With Hono

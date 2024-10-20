@@ -13,6 +13,7 @@ const ProjectsContainer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-6">
           {[...projects, ...projects, ...projects].map((project) => (
             <ProjectCard
+              description={project.description}
               id={project.id}
               key={project.id}
               imageUrl={project.imageUrl}
