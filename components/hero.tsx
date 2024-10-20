@@ -19,13 +19,6 @@ const Hero = () => {
             Post your projects, gain likes, and engage with comments from
             developers like you.
           </p>
-
-          {/* <div>
-            <button className="flex gap-1 items-center btn-primary text-xl p-5">
-              Explore Projects
-              <ChevronRightIcon className="h-5" />
-            </button>
-          </div> */}
           <div className="flex items-center gap-2 border-2 border-[#616165] rounded-md px-2 py-1 mt-2 focus-within:border-white transition-colors duration-200">
             <MagnifyingGlassIcon className="h-5" />
             <input

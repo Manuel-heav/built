@@ -4,14 +4,9 @@ import Container from "./container";
 import { LightBulbIcon } from "@heroicons/react/16/solid";
 import Link from "next/link";
 import { GithubIcon } from "./icons/icons";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { authClient } from "@/lib/auth-client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LogOut, LogOutIcon } from "lucide-react";
+import { LogOutIcon } from "lucide-react";
+import { Spinner } from "./ui/spinner";
 
 const Header = () => {
   const { data: session, isPending, error } = authClient.useSession();
@@ -55,7 +50,7 @@ const Header = () => {
                 onClick={handleSignOut}
                 className="cursor-pointer hover:scale-105 duration-200 ease-in-out"
               >
-                <LogOutIcon />
+                {isPending ? <Spinner size="small" /> : <LogOutIcon />}
               </div>
             )}
           </div>
