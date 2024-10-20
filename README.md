@@ -5,6 +5,7 @@
 - [x] Add loading screen to Auth functionalities
 - [x] Set up Hono
 - [x] Set Up Database and Backend for Project With Hono
+- [ ] Change the loading screen to a better one
 - [ ] Integrate Comments and Likes
 - [ ] Add Real-time Search
 - [ ] Do details page for each project
