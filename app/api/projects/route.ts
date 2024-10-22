@@ -57,50 +57,5 @@ app.get("/projects", async (c) => {
   return c.json({ projects: data });
 });
 
-app.post("/projects/:id/like", async (c) => {
-  console.log("Like request received");
-  const { id: projectId } = c.req.param();
-  const { user_id } = await c.req.json();
-  console.log("Project ID:", projectId, "User ID:", user_id);
-
-  const { data: existingLike, error: likeError } = await supabase
-    .from("project_likes")
-    .select("*")
-    .eq("user_id", user_id)
-    .eq("project_id", projectId)
-    .single();
-
-  if (likeError) {
-    return c.json({ error: likeError.message }, 400);
-  }
-
-  if (existingLike) {
-    const { error } = await supabase
-      .from("project_likes")
-      .delete()
-      .eq("user_id", user_id)
-      .eq("project_id", projectId);
-
-    if (error) {
-      return c.json({ error: error.message }, 400);
-    }
-
-    return c.json({ message: "Project unliked" });
-  } else {
-    const { error } = await supabase.from("project_likes").insert([
-      {
-        user_id,
-        project_id: projectId,
-      },
-    ]);
-
-    if (error) {
-      return c.json({ error: error.message }, 400);
-    }
-
-    return c.json({ message: "Project liked" });
-  }
-});
-
 export const POST = handle(app);
 export const GET = handle(app);
