@@ -19,10 +19,10 @@ const Header = () => {
     <div className="sticky top-0 z-50 py-4 backdrop-filter backdrop-blur-lg">
       <Container>
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-1">
+          <Link href="/" className="flex items-center gap-1">
             <LightBulbIcon className="h-6" />
             <h1 className="text-2xl font-bold">Built</h1>
-          </div>
+          </Link>
 
           <div className="flex items-center gap-5">
             {!session ? (
@@ -31,7 +31,7 @@ const Header = () => {
               </Link>
             ) : (
               <div>
-                <Link href="/auth/sign-up">
+                <Link href="/project-form">
                   <button className="btn-primary">Post Your Project</button>
                 </Link>
               </div>

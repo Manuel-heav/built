@@ -1,4 +1,5 @@
 "use client";
+import BulbLoading from "@/components/BulbLoading";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import Hero from "@/components/hero";
@@ -12,14 +13,7 @@ const Home = () => {
   console.log("Session", session);
 
   if (isPending) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="flex">
-          <Spinner />
-          Loading...
-        </div>
-      </div>
-    );
+    return <BulbLoading />;
   }
 
   return (
