@@ -16,6 +16,7 @@
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-popover": "^1.1.2",
     "@radix-ui/react-slot": "^1.1.0",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.45.6",
     "better-auth": "^0.4.12-beta.5",
     "better-sqlite3": "^11.3.0",
@@ -38,7 +39,7 @@
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.11",
-    "@types/node": "^20.16.11",
+    "@types/node": "^22.7.9",
     "@types/pg": "^8.11.10",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",

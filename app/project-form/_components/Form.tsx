@@ -4,10 +4,9 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Upload, Check, AlertCircle } from "lucide-react";
+import { Upload, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -22,24 +21,12 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
+import { supabase } from "@/lib/supabaseClient";
+import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import { formSchema } from "@/schema";
 
-const formSchema = z.object({
-  title: z
-    .string()
-    .min(2, "Title must be at least 2 characters")
-    .max(100, "Title must be less than 100 characters"),
-  description: z
-    .string()
-    .min(10, "Description must be at least 10 characters")
-    .max(500, "Description must be less than 500 characters"),
-  imageUrl: z.string().url("Please provide a valid URL for the image"),
-  tags: z
-    .array(z.enum(["Software", "UI/UX", "Libraries", "Packages", "Tools"]))
-    .min(1, "Please select at least one tag"),
-  githubRepo: z.string().url("Please provide a valid GitHub repository URL"),
-  liveDemo: z.string().url("Please provide a valid live demo URL"),
-  telegramChannel: z.string().optional(),
-});
+
 
 const TagButton = ({
   tag,
@@ -72,6 +59,8 @@ export default function ProjectSubmissionForm() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -89,12 +78,25 @@ export default function ProjectSubmissionForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     setSubmitError(null);
+    const projectValues = {
+    ...values, user_id: session?.user.id 
+    }
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const response = await fetch('/api/projects', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(projectValues),
+      });
 
-      // Log the form values (replace with actual API call in production)
+      if (!response.ok) {
+        throw new Error('Failed to submit project');
+      }
+      router.push("/")
+
+
       console.log(values);
 
       toast("Project Succesffully Submitted");
@@ -110,13 +112,37 @@ export default function ProjectSubmissionForm() {
     }
   }
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 300000) {
+        toast("Image size should not exceed 300 KB");
+        return;
+      }
+      toast("Uploading...");
       const reader = new FileReader();
-      reader.onloadend = () => {
+      reader.onloadend = async () => {
         setImagePreview(reader.result as string);
         form.setValue("imageUrl", URL.createObjectURL(file));
+
+        const bucket = "projects";
+        const randomFileName = `${Date.now()}-${file.name}`;
+
+        const { data, error } = await supabase.storage
+          .from(bucket)
+          .upload(randomFileName, file);
+
+        if (error) {
+          alert("Error uploading file.");
+          return;
+        }
+
+        const fileUrl = await supabase.storage
+          .from(bucket)
+          .getPublicUrl(randomFileName);
+
+        form.setValue("imageUrl", fileUrl.data.publicUrl);
+        toast("Upload complete!");
       };
       reader.readAsDataURL(file);
     }
@@ -169,7 +195,7 @@ export default function ProjectSubmissionForm() {
               name="imageUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Project Image</FormLabel>
+                  <FormLabel className="text-white">Thumbnail</FormLabel>
                   <FormControl>
                     <div className="flex items-center space-x-4">
                       <Input
@@ -307,7 +333,7 @@ export default function ProjectSubmissionForm() {
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Enter Telegram channel"
+                      placeholder="Enter Telegram channel (@DagmawiBabi)"
                       {...field}
                       className="bg-[#25252b] text-white border-[#35353d] focus:border-[#4d4d57] focus:ring-[#4d4d57]"
                     />

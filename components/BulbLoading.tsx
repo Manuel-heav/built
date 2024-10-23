@@ -41,25 +41,9 @@ export default function BulbLoading() {
           className="absolute inset-0 bg-white rounded-full opacity-20 blur-2xl"
         />
         <motion.div
-          animate={{
-            rotate: [0, 360],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "linear",
-          }}
           className="relative z-10"
         >
           <motion.div
-            animate={{
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
           >
             <Lightbulb size={80} className="text-white" />
           </motion.div>
@@ -68,7 +52,6 @@ export default function BulbLoading() {
           <motion.div
             key={index}
             initial="initial"
-            animate="animate"
             variants={particleVariants}
             style={{
               position: "absolute",
@@ -79,9 +62,6 @@ export default function BulbLoading() {
               borderRadius: "50%",
               backgroundColor: "white",
               transform: `rotate(${index * 45}deg) translateY(-40px)`,
-            }}
-            transition={{
-              delay: index * 0.15,
             }}
           />
         ))}
