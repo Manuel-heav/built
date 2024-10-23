@@ -7,12 +7,12 @@ export interface TagTypes {
 export interface ProjectType {
   description: string;
   id: number;
-  imageUrl: string;
+  image_url: string;
   title: string;
   tags: string[];
-  githubRepo: string;
-  liveDemo: string;
-  telegramChannel: string;
+  github_repo: string;
+  live_demo: string;
+  telegram_channel: string;
   likes: number;
   comments: number;
 }

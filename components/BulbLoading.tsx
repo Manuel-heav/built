@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Lightbulb } from "lucide-react";
+import { LightBulbIcon } from "@heroicons/react/16/solid";
 
 const glowVariants = {
   initial: { opacity: 0, scale: 0 },
@@ -45,7 +45,7 @@ export default function BulbLoading() {
         >
           <motion.div
           >
-            <Lightbulb size={80} className="text-white" />
+            <LightBulbIcon className="text-white h-20" />
           </motion.div>
         </motion.div>
         {[...Array(8)].map((_, index) => (

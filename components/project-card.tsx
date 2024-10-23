@@ -10,13 +10,14 @@ import {
 } from "@heroicons/react/16/solid";
 
 const ProjectCard = ({
-  imageUrl,
+  id,
+  image_url,
   description,
   title,
   tags,
-  githubRepo,
-  liveDemo,
-  telegramChannel,
+  github_repo,
+  live_demo,
+  telegram_channel,
   likes,
   comments,
 }: ProjectType) => {
@@ -29,13 +30,15 @@ const ProjectCard = ({
   return (
     <div className="hover:scale-105 hover:shadow-2xl hover:bg-gradient-to-r hover:from-[#24242a] hover:to-[#33333b] pb-4 rounded-lg duration-200">
       <div>
+        <Link href={`/project/${id}`}>
         <Image
-          className="cursor-pointer border border-gray-800 rounded-sm"
-          width={500}
-          height={500}
-          src={imageUrl}
+          className="cursor-pointer border border-gray-800 rounded-sm overflow-hidden h-40 object-cover"
+          width={500} 
+          height={300} 
+          src={image_url}
           alt={title}
         />
+        </Link>
         <div className="px-2 flex justify-between flex-col h-28">
           <div className="flex gap-3 pt-4 items-center">
             <h1>{title}</h1>
@@ -61,13 +64,13 @@ const ProjectCard = ({
             </div>
 
             <div className="flex gap-3 items-center">
-              <Link href={githubRepo}>
+              <Link href={github_repo}>
                 <GithubIcon />
               </Link>
-              <Link href={telegramChannel}>
+              <Link href={telegram_channel}>
                 <TelegramIcon />
               </Link>
-              <Link href={liveDemo}>
+              <Link href={live_demo}>
                 <ArrowUpRightIcon className="h-5" />
               </Link>
             </div>

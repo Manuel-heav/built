@@ -13,7 +13,7 @@ export const formSchema = z.object({
     tags: z
       .array(z.enum(["Software", "UI/UX", "Libraries", "Packages", "Tools"]))
       .min(1, "Please select at least one tag"),
-    githubRepo: z.string().url("Please provide a valid GitHub repository URL"),
-    liveDemo: z.string().url("Please provide a valid live demo URL"),
-    telegramChannel: z.string().optional(),
+    github_repo: z.string().url("Please provide a valid GitHub repository URL"),
+    live_demo: z.string().url("Please provide a valid live demo URL"),
+    telegram_channel: z.string().optional(),
   });
