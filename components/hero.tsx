@@ -1,10 +1,17 @@
 import React from "react";
 import Container from "./container";
-import { ChevronRightIcon, MagnifyingGlassIcon } from "@heroicons/react/16/solid";
+import { ChevronRightIcon } from "@heroicons/react/16/solid";
 import { Spotlight } from "./ui/Spotlight";
-import Link from "next/link";
 
 const Hero = () => {
+
+  const scrollToProjects = () => {
+    const projectsSection = document.getElementById("projects"); 
+    if (projectsSection) {
+      projectsSection.scrollIntoView({ behavior: "smooth" }); 
+    }
+  };
+
   return (
     <div>
       <Spotlight
@@ -29,10 +36,13 @@ const Hero = () => {
             />
           </div> */}
           <div>
-            <Link href="#projects" className="flex gap-1 items-center btn-primary text-xl p-5">
+          <button
+              onClick={scrollToProjects} 
+              className="flex gap-1 items-center btn-primary text-xl p-5"
+            >
               Explore Projects
               <ChevronRightIcon className="h-5" />
-            </Link >
+            </button>
           </div>
         </div>
       </Container>
