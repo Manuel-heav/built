@@ -11,11 +11,36 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY as string;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-app.post("/projects/:id/like", async (c) => {
-  const { id: projectId } = c.req.param(); // Project ID from the URL
-  const { user_id } = await c.req.json(); // User ID from the request body
+app.get("/projects/:id/like", async (c) => {
+  const { id: user_id } = c.req.param(); 
 
-  // Check if the user has already liked this project
+  const { data: likedProjects, error: likeError } = await supabase
+    .from("project_likes")
+    .select("project_id")
+    .eq("user_id", user_id);
+
+  if (likeError) {
+    return c.json({ error: likeError.message }, 400);
+  }
+
+  const projectIds = likedProjects?.map((project) => project.project_id) || [];
+
+  const { data: projects, error: projectError } = await supabase
+    .from("projects")
+    .select("*")
+    .in("id", projectIds);
+
+  if (projectError) {
+    return c.json({ error: projectError.message }, 400);
+  }
+
+  return c.json({ projects });
+});
+
+app.post("/projects/:id/like", async (c) => {
+  const { id: projectId } = c.req.param(); 
+  const { user_id } = await c.req.json(); 
+
   const { data: existingLike, error: likeError } = await supabase
     .from("project_likes")
     .select("*")
@@ -24,12 +49,10 @@ app.post("/projects/:id/like", async (c) => {
     .single();
 
   if (likeError && likeError.code !== "PGRST116") {
-    // Handle error, unless it's a 'no rows returned' error
     return c.json({ error: likeError.message }, 400);
   }
 
   if (existingLike) {
-    // If the user has already liked, remove the like (unlike)
     const { error: deleteError } = await supabase
       .from("project_likes")
       .delete()
@@ -40,7 +63,6 @@ app.post("/projects/:id/like", async (c) => {
       return c.json({ error: deleteError.message }, 400);
     }
 
-    // Fetch the current like count
     const { data: projectData, error: projectError } = await supabase
       .from("projects")
       .select("likes")
@@ -53,12 +75,11 @@ app.post("/projects/:id/like", async (c) => {
 
     const newLikeCount = (projectData?.likes || 0) - 1;
 
-    // Update the like count manually
     const { error: updateError, data: updatedData } = await supabase
       .from("projects")
       .update({ likes: newLikeCount })
       .eq("id", projectId)
-      .select(); // Log the response
+      .select(); 
 
     if (updateError) {
       console.log("Update Error:", updateError.message);
@@ -68,7 +89,6 @@ app.post("/projects/:id/like", async (c) => {
     console.log("Update Success:", updatedData);
     return c.json({ message: "Project unliked", updatedData });
   } else {
-    // If the user has not liked yet, insert a like
     const { error: insertError } = await supabase
       .from("project_likes")
       .insert([{ user_id, project_id: projectId }]);
@@ -77,7 +97,6 @@ app.post("/projects/:id/like", async (c) => {
       return c.json({ error: insertError.message }, 400);
     }
 
-    // Fetch the current like count
     const { data: projectData, error: projectError } = await supabase
       .from("projects")
       .select("likes")
@@ -90,12 +109,11 @@ app.post("/projects/:id/like", async (c) => {
 
     const newLikeCount = (projectData?.likes || 0) + 1;
 
-    // Update the like count manually
     const { error: updateError, data: updatedData } = await supabase
       .from("projects")
       .update({ likes: newLikeCount })
       .eq("id", projectId)
-      .select(); // Log the response
+      .select();
 
     if (updateError) {
       console.log("Update Error:", updateError.message);
@@ -107,4 +125,5 @@ app.post("/projects/:id/like", async (c) => {
   }
 });
 
+export const GET = handle(app);
 export const POST = handle(app);

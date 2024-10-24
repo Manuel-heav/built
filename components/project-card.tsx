@@ -1,4 +1,3 @@
-import { ProjectType } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -9,7 +8,22 @@ import {
   HeartIcon,
 } from "@heroicons/react/16/solid";
 
+
+interface ProjectProps {
+    description: string;
+    id: number;
+    image_url: string;
+    title: string;
+    tags: string[];
+    github_repo: string;
+    live_demo: string;
+    telegram_channel: string;
+    likes: number;
+    comments: number;
+    isLiked: boolean;
+}
 const ProjectCard = ({
+  isLiked,
   id,
   image_url,
   description,
@@ -20,7 +34,7 @@ const ProjectCard = ({
   telegram_channel,
   likes,
   comments,
-}: ProjectType) => {
+}: ProjectProps) => {
   const truncateDescription = (description: string) => {
     if (description.length > 50) {
       return description.slice(0, 50) + "...";
@@ -53,7 +67,9 @@ const ProjectCard = ({
           <div className="flex justify-between">
             <div className="flex gap-4">
               <div className="flex gap-1 items-center">
-                <HeartIcon className="h-5 cursor-pointer" />
+                {
+                  isLiked ? <HeartIcon className="h-5 cursor-pointer text-red-700" /> : <HeartIcon className="h-5 cursor-pointer" />
+                }
                 <p>{likes}</p>
               </div>
 
