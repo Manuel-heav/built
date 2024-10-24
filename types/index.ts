@@ -6,7 +6,7 @@ export interface TagTypes {
 
 export interface ProjectType {
   description: string;
-  id: number;
+  id: string;
   image_url: string;
   title: string;
   tags: string[];

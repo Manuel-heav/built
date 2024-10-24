@@ -1,29 +1,31 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { GithubIcon, TelegramIcon } from "./icons/icons";
 import {
   ArrowUpRightIcon,
   ChatBubbleBottomCenterIcon,
   HeartIcon,
 } from "@heroicons/react/16/solid";
-
+import { authClient } from "@/lib/auth-client";
 
 interface ProjectProps {
-    description: string;
-    id: number;
-    image_url: string;
-    title: string;
-    tags: string[];
-    github_repo: string;
-    live_demo: string;
-    telegram_channel: string;
-    likes: number;
-    comments: number;
-    isLiked: boolean;
+  description: string;
+  id: string;
+  image_url: string;
+  title: string;
+  tags: string[];
+  github_repo: string;
+  live_demo: string;
+  telegram_channel: string;
+  likes: number;
+  comments: number;
+  isLiked: boolean;
 }
+
 const ProjectCard = ({
-  isLiked,
+  isLiked: initialIsLiked,
   id,
   image_url,
   description,
@@ -32,26 +34,57 @@ const ProjectCard = ({
   github_repo,
   live_demo,
   telegram_channel,
-  likes,
+  likes: initialLikes,
   comments,
 }: ProjectProps) => {
+  const { data: session } = authClient.useSession();
+  const user_id = session?.user.id;
+
+  const [isLiked, setIsLiked] = useState(initialIsLiked);
+  const [likes, setLikes] = useState(initialLikes);
+
   const truncateDescription = (description: string) => {
     if (description.length > 50) {
       return description.slice(0, 50) + "...";
     }
     return description;
   };
+
+  const likeProject = async (tobeLikedId: string) => {
+    const updatedLikes = isLiked ? likes - 1 : likes + 1;
+    setLikes(updatedLikes);
+    setIsLiked(!isLiked);
+
+    try {
+      const response = await fetch(`/api/projects/${tobeLikedId}/like`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to like project");
+      }
+    } catch (error) {
+      console.error("An error occurred while liking the project:", error);
+      setLikes(isLiked ? likes + 1 : likes - 1); // revert the change
+      setIsLiked(isLiked); // revert the like status
+    }
+  };
+
   return (
     <div className="hover:scale-105 hover:shadow-2xl hover:bg-gradient-to-r hover:from-[#24242a] hover:to-[#33333b] pb-4 rounded-lg duration-200">
       <div>
         <Link href={`/project/${id}`}>
-        <Image
-          className="cursor-pointer border border-gray-800 rounded-sm overflow-hidden h-40 object-cover"
-          width={500} 
-          height={300} 
-          src={image_url}
-          alt={title}
-        />
+          <Image
+            className="cursor-pointer border border-gray-800 rounded-sm overflow-hidden h-40 object-cover"
+            width={500}
+            height={300}
+            src={image_url}
+            alt={title}
+          />
         </Link>
         <div className="px-2 flex justify-between flex-col h-28">
           <div className="flex gap-3 pt-4 items-center">
@@ -67,9 +100,10 @@ const ProjectCard = ({
           <div className="flex justify-between">
             <div className="flex gap-4">
               <div className="flex gap-1 items-center">
-                {
-                  isLiked ? <HeartIcon className="h-5 cursor-pointer text-red-700" /> : <HeartIcon className="h-5 cursor-pointer" />
-                }
+                <HeartIcon
+                  className={`h-5 cursor-pointer ${isLiked ? "text-red-700" : ""}`}
+                  onClick={() => likeProject(id)}
+                />
                 <p>{likes}</p>
               </div>
 

@@ -19,10 +19,11 @@ const SkeletonProjectCard = () => {
 const ProjectsContainer = () => {
   const [projects, setProjects] = useState<ProjectType[]>([]);
   const [loading, setLoading] = useState(true);
+  const [likedProjectIds, setLikedProjectIds] = useState<Set<string>>(new Set()); 
   const { data: session } = authClient.useSession();
-  const [likedProjectIds, setLikedProjectIds] = useState<Set<number>>(new Set()); 
 
   const user_id = session?.user.id;
+
 
   useEffect(() => {
     const fetchProjectsData = async () => {
@@ -41,7 +42,7 @@ const ProjectsContainer = () => {
 
         if (likedProjectsResponse && likedProjectsResponse.ok) {
           const likedProjectsData = await likedProjectsResponse.json();
-          const likedIds = new Set<number>(likedProjectsData.projects.map((project: ProjectType) => project.id));
+          const likedIds = new Set<string>(likedProjectsData.projects.map((project: ProjectType) => project.id));
           setLikedProjectIds(likedIds);
         }
 
