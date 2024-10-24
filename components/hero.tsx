@@ -20,10 +20,10 @@ const Hero = () => {
       />
       <Container>
         <div className="flex flex-col items-center justify-center h-[65vh] gap-5">
-          <h1 className="text-7xl text-center w-[70%]">
+          <h1 className="text-3xl md:text-5xl lg:text-7xl text-center w-[70%]">
             Find And Rate Your Favorite Projects.
           </h1>
-          <p className="text-center text-xl mt-2 text-[#85868d] w-[50%]">
+          <p className="text-center text-md md:text-xl mt-2 text-[#85868d] w-[50%]">
             Post your projects, gain likes, and engage with comments from
             developers like you.
           </p>

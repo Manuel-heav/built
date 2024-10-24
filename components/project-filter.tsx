@@ -19,7 +19,7 @@ const ProjectFilter = ({ selectedTag, setSelectedTag }: ProjectFilterProps) => {
   };
 
   return (
-    <div className="flex gap-4">
+    <div className="flex flex-wrap gap-4">
       <button
         onClick={() => setSelectedTag(null)}
         className={cn(
@@ -29,7 +29,6 @@ const ProjectFilter = ({ selectedTag, setSelectedTag }: ProjectFilterProps) => {
       >
         All
       </button>
-
       {tags.map((tag) => (
         <button
           key={tag.id}
