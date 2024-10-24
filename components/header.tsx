@@ -16,7 +16,7 @@ const Header = () => {
     await authClient.signOut();
   };
   return (
-    <div className="sticky top-0 z-50 md:py-4 py-6 backdrop-filter backdrop-blur-lg">
+    <div className="sticky top-0 z-50 md:py-4 py-5 backdrop-filter backdrop-blur-lg">
       <Container>
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center gap-1">

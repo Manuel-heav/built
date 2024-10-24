@@ -10,7 +10,7 @@
 - [x] Integrate Likes
 - [x] Add Filter Options
 - [x] Add Real-time Search
-- [ ] Responsiveness
+- [x] Responsiveness
 - [ ] Do details page for each project
 - [ ] Make auth work in production
 - [ ] Integrate Comments

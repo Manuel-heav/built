@@ -57,5 +57,17 @@ app.get("/projects", async (c) => {
   return c.json({ projects: data });
 });
 
+app.get("/projects/:id", async (c) => {
+  const { id } = c.req.param();
+
+  const { data, error } = await supabase.from("projects").select("*").eq("id", id);
+
+  if (error) {
+    return c.json({ error: error.message }, 400);
+  }
+
+  return c.json({ project: data });
+});
+
 export const POST = handle(app);
 export const GET = handle(app);
