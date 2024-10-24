@@ -38,24 +38,24 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
       <Container>
         <div className="animate-pulse flex flex-col gap-6">
           <div className="flex flex-col md:flex-row gap-6">
-            <div className="md:w-2/3 h-64 bg-gray-200 rounded-lg"></div>
+            <div className="md:w-2/3 h-64 bg-gray-500 rounded-lg"></div>
             <div className="md:w-2/3 flex flex-col justify-between">
               <div className="space-y-4">
-                <div className="h-8 bg-gray-200 rounded w-3/4"></div>
-                <div className="h-4 bg-gray-200 rounded w-full"></div>
-                <div className="h-4 bg-gray-200 rounded w-full"></div>
+                <div className="h-8 bg-gray-500 rounded w-3/4"></div>
+                <div className="h-4 bg-gray-500 rounded w-full"></div>
+                <div className="h-4 bg-gray-500 rounded w-full"></div>
               </div>
               <div className="flex gap-3 mt-4">
-                <div className="h-5 w-5 bg-gray-200 rounded-full"></div>
-                <div className="h-5 w-5 bg-gray-200 rounded-full"></div>
-                <div className="h-5 w-5 bg-gray-200 rounded-full"></div>
+                <div className="h-5 w-5 bg-gray-500 rounded-full"></div>
+                <div className="h-5 w-5 bg-gray-500 rounded-full"></div>
+                <div className="h-5 w-5 bg-gray-500 rounded-full"></div>
               </div>
             </div>
           </div>
           <div className="mt-6">
-            <div className="h-6 bg-gray-200 rounded w-1/4"></div>
-            <div className="h-4 bg-gray-200 rounded w-full mt-2"></div>
-            <div className="h-4 bg-gray-200 rounded w-full mt-2"></div>
+            <div className="h-6 bg-gray-500 rounded w-1/4"></div>
+            <div className="h-4 bg-gray-500 rounded w-full mt-2"></div>
+            <div className="h-4 bg-gray-500 rounded w-full mt-2"></div>
           </div>
         </div>
       </Container>

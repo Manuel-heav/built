@@ -11,7 +11,7 @@
 - [x] Add Filter Options
 - [x] Add Real-time Search
 - [x] Responsiveness
-- [ ] Do details page for each project
+- [x] Do details page for each project
 - [ ] Make auth work in production
 - [ ] Integrate Comments
 - [ ] Polish UI and Code
