@@ -69,8 +69,8 @@ const ProjectCard = ({
       }
     } catch (error) {
       console.error("An error occurred while liking the project:", error);
-      setLikes(isLiked ? likes + 1 : likes - 1); // revert the change
-      setIsLiked(isLiked); // revert the like status
+      setLikes(isLiked ? likes + 1 : likes - 1); 
+      setIsLiked(isLiked);
     }
   };
 

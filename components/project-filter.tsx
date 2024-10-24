@@ -1,30 +1,46 @@
 "use client";
 import { tags } from "@/constants";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import React from "react";
 
-const ProjectFilter = () => {
-  const path = usePathname();
+interface ProjectFilterProps {
+  selectedTag: string | null; 
+  setSelectedTag: (tag: string | null) => void;
+}
 
-  const isActive = (url: string) => {
-    return path === url ? "bg-white text-black" : "hover:text-white";
+const ProjectFilter = ({ selectedTag, setSelectedTag }: ProjectFilterProps) => {
+
+  const isActive = (tag: string) => {
+    return selectedTag === tag ? "bg-white text-black" : "hover:text-white";
+  };
+
+  const isAllActive = () => {
+    return selectedTag === null ? "bg-white text-black" : "hover:text-white";
   };
 
   return (
     <div className="flex gap-4">
+      <button
+        onClick={() => setSelectedTag(null)}
+        className={cn(
+          "text-sm text-[#85868d] px-4 py-1 rounded-md cursor-pointer duration-500",
+          isAllActive()
+        )}
+      >
+        All
+      </button>
+
       {tags.map((tag) => (
-        <Link
+        <button
           key={tag.id}
-          href={tag.url}
+          onClick={() => setSelectedTag(tag.title)} 
           className={cn(
             "text-sm text-[#85868d] px-4 py-1 rounded-md cursor-pointer duration-500",
-            isActive(tag.url)
+            isActive(tag.title)
           )}
         >
-          <p className="">{tag.title}</p>
-        </Link>
+          <p>{tag.title}</p>
+        </button>
       ))}
     </div>
   );

@@ -1,7 +1,8 @@
 import React from "react";
 import Container from "./container";
-import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
+import { ChevronRightIcon, MagnifyingGlassIcon } from "@heroicons/react/16/solid";
 import { Spotlight } from "./ui/Spotlight";
+import Link from "next/link";
 
 const Hero = () => {
   return (
@@ -19,13 +20,19 @@ const Hero = () => {
             Post your projects, gain likes, and engage with comments from
             developers like you.
           </p>
-          <div className="flex items-center gap-2 border-2 border-[#616165] rounded-md px-2 py-1 mt-2 focus-within:border-white transition-colors duration-200">
+          {/* <div className="flex items-center gap-2 border-2 border-[#616165] rounded-md px-2 py-1 mt-2 focus-within:border-white transition-colors duration-200">
             <MagnifyingGlassIcon className="h-5" />
             <input
               type="text"
               placeholder="Search for projects"
               className="bg-transparent text-[#f0f0f0] focus:outline-none text-sm border-gray-300"
             />
+          </div> */}
+          <div>
+            <Link href="#projects" className="flex gap-1 items-center btn-primary text-xl p-5">
+              Explore Projects
+              <ChevronRightIcon className="h-5" />
+            </Link >
           </div>
         </div>
       </Container>

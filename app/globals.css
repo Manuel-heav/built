@@ -8,6 +8,7 @@ body {
   background-color: #151519;
   color: #fff;
   font-family: "Inter", sans-serif;
+  scroll-behavior: smooth;
 }
 
 ::-webkit-scrollbar {

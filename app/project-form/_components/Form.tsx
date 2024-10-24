@@ -115,7 +115,7 @@ export default function ProjectSubmissionForm() {
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 300000) {
+      if (file.size > 2000000) {
         toast("Image size should not exceed 300 KB");
         return;
       }
