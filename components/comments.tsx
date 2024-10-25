@@ -74,20 +74,6 @@ export default function CommentSection({ projectId }: CommentProps) {
     }
   }
   
-  
-
-  const updateCommentReplies = (comments: Comment[], parentId: string, newReply: Comment): Comment[] => {
-    return comments.map(comment => {
-      if (comment.id === parentId) {
-        return { ...comment, replies: [newReply, ...(comment.replies || [])] }
-      }
-      if (comment.replies) {
-        return { ...comment, replies: updateCommentReplies(comment.replies, parentId, newReply) }
-      }
-      return comment
-    })
-  }
-
   const renderComments = (comments: Comment[], level: number = 0) => {
     return comments.map((comment) => (
       <div key={comment.id} className={`my-4 ${level > 0 ? 'ml-8' : ''} bg-custom-500 rounded-lg shadow-sm`}>
@@ -99,7 +85,7 @@ export default function CommentSection({ projectId }: CommentProps) {
             <button 
               onClick={() => setReplyingTo(comment.id)}
               className="mt-2 text-sm text-custom-200 hover:text-white"
-              disabled={loading}  // Disable reply button during loading
+              disabled={loading}  
             >
               {loading && replyingTo === comment.id ? "Posting..." : "Reply"}
             </button>
@@ -122,7 +108,7 @@ export default function CommentSection({ projectId }: CommentProps) {
                   <button 
                     onClick={() => handlePostComment(comment.id)}
                     className="px-4 py-2 text-sm bg-white text-black border border-custom-400 rounded-md hover:scale-105 duration-500"
-                    disabled={loading}  // Disable post button during loading
+                    disabled={loading}  
                   >
                     Post Reply
                   </button>
