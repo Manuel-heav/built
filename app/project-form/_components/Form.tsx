@@ -60,7 +60,7 @@ export default function ProjectSubmissionForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const router = useRouter();
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session } = authClient.useSession();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -105,7 +105,7 @@ export default function ProjectSubmissionForm() {
       setImagePreview(null);
     } catch (error) {
       setSubmitError(
-        "An error occurred while submitting the project. Please try again."
+        `An error occurred while submitting the project. Please try again. ${error}`
       );
     } finally {
       setIsSubmitting(false);
@@ -128,7 +128,7 @@ export default function ProjectSubmissionForm() {
         const bucket = "projects";
         const randomFileName = `${Date.now()}-${file.name}`;
 
-        const { data, error } = await supabase.storage
+        const { error } = await supabase.storage
           .from(bucket)
           .upload(randomFileName, file);
 
