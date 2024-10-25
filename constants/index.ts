@@ -26,7 +26,88 @@ export const tags: TagTypes[] = [
     title: "Tools",
     url: "/tools",
   },
+  {
+    id: 12,
+    title: "E-commerce",
+    url: "/ecommerce",
+  },
+  {
+    id: 13,
+    title: "Open Source",
+    url: "/open-source",
+  },
+  {
+    id: 14,
+    title: "API",
+    url: "/api",
+  },
+  {
+    id: 15,
+    title: "Data Science",
+    url: "/data-science",
+  },
+  {
+    id: 16,
+    title: "Machine Learning",
+    url: "/machine-learning",
+  },
+  {
+    id: 17,
+    title: "Blockchain",
+    url: "/blockchain",
+  },
+  {
+    id: 18,
+    title: "Security",
+    url: "/security",
+  },
+  {
+    id: 20,
+    title: "Automation",
+    url: "/automation",
+  },
+  {
+    id: 24,
+    title: "Gaming",
+    url: "/gaming",
+  },
+  {
+    id: 25,
+    title: "Entertainment",
+    url: "/entertainment",
+  },
+  {
+    id: 26,
+    title: "AI",
+    url: "/ai",
+  },
+  {
+    id: 27,
+    title: "Cloud",
+    url: "/cloud",
+  },
+  {
+    id: 28,
+    title: "Mobile",
+    url: "/mobile",
+  },
+  {
+    id: 29,
+    title: "Desktop",
+    url: "/desktop",
+  },
+  {
+    id: 30,
+    title: "Web",
+    url: "/web",
+  },
+  {
+    id: 31,
+    title: "VR/AR",
+    url: "/vr-ar",
+  },
 ];
+
 
 // export const projects: ProjectType[] = [
 //   {

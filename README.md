@@ -13,7 +13,7 @@
 - [x] Responsiveness
 - [x] Do details page for each project
 - [x] Integrate Comments
-- [ ] Make auth work in production
+- [x] Make auth work in production
 - [ ] Polish UI and Code
  - [x] 1. Login salareg it allows me to like. So disable bidereg or sign in minamin bilo biteyk it's nice
  - [ ] 2. We need more tags

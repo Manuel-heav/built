@@ -25,8 +25,8 @@ import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { formSchema } from "@/schema";
-
-
+import { TagTypes } from "@/types";
+import { tags } from "@/constants";
 
 const TagButton = ({
   tag,
@@ -116,7 +116,7 @@ export default function ProjectSubmissionForm() {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 2000000) {
-        toast("Image size should not exceed 300 KB");
+        toast("Image size should not exceed 2 MB");
         return;
       }
       toast("Uploading...");
@@ -237,42 +237,17 @@ export default function ProjectSubmissionForm() {
                   <FormLabel className="text-white">Tags</FormLabel>
                   <FormControl>
                     <div className="flex flex-wrap gap-2">
-                      {[
-                        "Software",
-                        "UI/UX",
-                        "Libraries",
-                        "Packages",
-                        "Tools",
-                      ].map((tag) => (
+                      {tags.map((tag: TagTypes) => (
                         <TagButton
-                          key={tag}
-                          tag={tag}
-                          selected={field.value.includes(
-                            tag as
-                              | "Software"
-                              | "UI/UX"
-                              | "Libraries"
-                              | "Packages"
-                              | "Tools"
-                          )}
+                          key={tag.id}
+                          tag={tag.title}
+                          selected={field.value.includes(tag.title)}
                           onClick={() => {
-                            const updatedTags = field.value.includes(
-                              tag as
-                                | "Software"
-                                | "UI/UX"
-                                | "Libraries"
-                                | "Packages"
-                                | "Tools"
-                            )
-                              ? field.value.filter((t) => t !== tag)
+                            const updatedTags = field.value.includes(tag.title)
+                              ? field.value.filter((t) => t !== tag.title)
                               : [
                                   ...field.value,
-                                  tag as
-                                    | "Software"
-                                    | "UI/UX"
-                                    | "Libraries"
-                                    | "Packages"
-                                    | "Tools",
+                                  tag.title,
                                 ];
                             field.onChange(updatedTags);
                           }}
@@ -281,7 +256,7 @@ export default function ProjectSubmissionForm() {
                     </div>
                   </FormControl>
                   <FormDescription className="text-[#9c9ca6]">
-                    Select all that apply
+                    You can select only up to three tags
                   </FormDescription>
                   <FormMessage className="text-[#ff6b6b]" />
                 </FormItem>
