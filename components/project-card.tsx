@@ -69,7 +69,7 @@ const ProjectCard = ({
       }
     } catch (error) {
       console.error("An error occurred while liking the project:", error);
-      setLikes(isLiked ? likes + 1 : likes - 1); 
+      setLikes(isLiked ? likes + 1 : likes - 1);
       setIsLiked(isLiked);
     }
   };
@@ -100,10 +100,18 @@ const ProjectCard = ({
           <div className="flex justify-between">
             <div className="flex gap-4">
               <div className="flex gap-1 items-center">
-                <HeartIcon
-                  className={`h-5 cursor-pointer ${isLiked ? "text-red-700" : ""}`}
-                  onClick={() => likeProject(id)}
-                />
+                {session ? (
+                  <HeartIcon
+                    className={`h-5 cursor-pointer ${
+                      isLiked ? "text-red-700" : ""
+                    }`}
+                    onClick={() => likeProject(id)}
+                  />
+                ) : (
+                  <Link href="/auth/sign-in">
+                    <HeartIcon className="h-5 cursor-pointer" />
+                  </Link>
+                )}
                 <p>{likes}</p>
               </div>
 

@@ -1,4 +1,5 @@
 "use client";
+import CommentSection from "@/components/comments";
 import Container from "@/components/container";
 import { GithubIcon, TelegramIcon } from "@/components/icons/icons";
 import { ProjectType } from "@/types";
@@ -135,8 +136,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
         </div>
 
         <div className="mt-6">
-          <h3 className="text-lg font-semibold">Comments</h3>
-          <p className="text-sm text-gray-500 mt-2">No comments for this post yet.</p>
+        <CommentSection projectId={project.id} />
         </div>
       </div>
     </Container>

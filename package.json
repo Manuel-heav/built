@@ -18,6 +18,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.45.6",
+    "axios": "^1.7.7",
     "better-auth": "^0.4.12-beta.5",
     "better-sqlite3": "^11.3.0",
     "class-variance-authority": "^0.7.0",
