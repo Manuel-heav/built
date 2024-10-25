@@ -48,39 +48,24 @@ export default function CommentSection({ projectId }: CommentProps) {
     }
     if (!newComment && !replyComment) return
   
+    setLoading(true)
+    const content = parentId ? replyComment : newComment
+  
     try {
-      setLoading(true)
-      const created_at = new Date().toISOString()
-      const content = parentId ? replyComment : newComment
-      const response = await axios.post<Comment>(`/api/comments`, {
+      await axios.post(`/api/comments`, {
         project_id: projectId,
         parent_id: parentId,
         content: content,
         name: session.user.name,
         user_id: session.user.id,
-        created_at: created_at
       })
   
-      const newCommentData: Comment = {
-        id: response.data.id,
-        project_id: projectId,
-        user_id: session.user.id,
-        parent_id: parentId,
-        content: content,
-        created_at: created_at,
-        name: session.user.name,
-        replies: []
-      }
+      const response = await axios.get<Comment[]>(`/api/comments/${projectId}`)
+      setComments(response.data)
   
       setNewComment('')
       setReplyComment('')
       setReplyingTo(null)
-  
-      if (parentId) {
-        setComments(prevComments => updateCommentReplies(prevComments, parentId, newCommentData))
-      } else {
-        setComments(prev => [newCommentData, ...prev])
-      }
     } catch (err) {
       console.error(err)
       setError('Error posting comment')
@@ -88,6 +73,7 @@ export default function CommentSection({ projectId }: CommentProps) {
       setLoading(false)
     }
   }
+  
   
 
   const updateCommentReplies = (comments: Comment[], parentId: string, newReply: Comment): Comment[] => {
@@ -113,8 +99,9 @@ export default function CommentSection({ projectId }: CommentProps) {
             <button 
               onClick={() => setReplyingTo(comment.id)}
               className="mt-2 text-sm text-custom-200 hover:text-white"
+              disabled={loading}  // Disable reply button during loading
             >
-              Reply
+              {loading && replyingTo === comment.id ? "Posting..." : "Reply"}
             </button>
             {replyingTo === comment.id && (
               <div className="mt-4">
@@ -135,6 +122,7 @@ export default function CommentSection({ projectId }: CommentProps) {
                   <button 
                     onClick={() => handlePostComment(comment.id)}
                     className="px-4 py-2 text-sm bg-white text-black border border-custom-400 rounded-md hover:scale-105 duration-500"
+                    disabled={loading}  // Disable post button during loading
                   >
                     Post Reply
                   </button>
