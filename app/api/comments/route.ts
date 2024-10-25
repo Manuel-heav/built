@@ -22,9 +22,8 @@ interface Comment {
   created_at: string;
 }
 
-// Post a new comment or reply
 app.post("/comments", async (c) => {
-  const { project_id, user_id, content, parent_id,name } = await c.req.json();
+  const { project_id, user_id, content, parent_id, name } = await c.req.json();
 
   const newComment: Comment = {
     id: uuidv4(),
@@ -36,10 +35,39 @@ app.post("/comments", async (c) => {
     created_at: new Date().toISOString(),
   };
 
-  const { data, error } = await supabase.from("comments").insert([newComment]);
+  const [commentInsertion, projectUpdate] = await Promise.all([
+    supabase.from("comments").insert([newComment]),
 
-  if (error) return c.json({ error: error.message }, 500);
+    supabase
+      .from("projects")
+      .select("comments")
+      .eq("id", project_id)
+      .single()
+      .then(({ data: projectData, error: projectError }) => {
+        if (projectError) throw new Error(projectError.message);
 
-  return c.json({ comment: data });
+        const newCommentCount = (projectData?.comments || 0) + 1;
+        
+        return supabase
+          .from("projects")
+          .update({ comments: newCommentCount })
+          .eq("id", project_id)
+          .select();
+      }),
+  ]);
+
+  const [commentInsertionResult, projectUpdateResult] = [commentInsertion, projectUpdate];
+
+  if (commentInsertionResult.error) {
+    return c.json({ error: commentInsertionResult.error.message }, 500);
+  }
+
+  if (projectUpdateResult.error) {
+    console.log("Update Error:", projectUpdateResult.error.message);
+    return c.json({ error: projectUpdateResult.error.message }, 500);
+  }
+
+  return c.json({ comment: commentInsertionResult.data });
 });
+
 export const POST = handle(app);

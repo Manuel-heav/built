@@ -13,7 +13,7 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY as string;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 interface Comment {
-  name: string,
+  name: string;
   id: string;
   project_id: string;
   user_id: string;
@@ -52,26 +52,6 @@ app.get("/comments/:projectId", async (c) => {
   return c.json(nestComments());
 });
 
-// Post a new comment or reply
-app.post("/comments", async (c) => {
-  const { project_id, user_id, content, parent_id, name } = await c.req.json();
-
-  const newComment: Comment = {
-    id: uuidv4(),
-    project_id,
-    name,
-    user_id,
-    content,
-    parent_id: parent_id || null,
-    created_at: new Date().toISOString(),
-  };
-
-  const { data, error } = await supabase.from("comments").insert([newComment]);
-
-  if (error) return c.json({ error: error.message }, 500);
-
-  return c.json({ comment: data });
-});
 
 app.get("/replies/:commentId", async (c) => {
   const commentId = c.req.param("commentId");

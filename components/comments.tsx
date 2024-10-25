@@ -35,7 +35,7 @@ export default function CommentSection({ projectId }: CommentProps) {
         const response = await axios.get<Comment[]>(`/api/comments/${projectId}`)
         setComments(response.data)
       } catch (err) {
-        setError('Error loading comments')
+        setError(`Error loading comments: ${err}`)
       }
     }
     fetchComments()
