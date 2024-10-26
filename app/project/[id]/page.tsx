@@ -1,6 +1,7 @@
 "use client";
 import CommentSection from "@/components/comments";
 import Container from "@/components/container";
+import GithubStats from "@/components/github-stats";
 import { GithubIcon, TelegramIcon } from "@/components/icons/icons";
 import { Button } from "@/components/ui/button";
 import { ProjectType } from "@/types";
@@ -18,6 +19,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
   const { id } = params;
   const [project, setProject] = useState<ProjectType | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showGithubStats, setShowGithubStats] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -130,8 +132,8 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
             </div>
 
             <div className="mt-5 flex gap-2">
-              <Button className="border-gray-600 border-2 hover:scale-105 transition duration-200">
-                Github Stats
+              <Button onClick={() => setShowGithubStats(!showGithubStats)} className="border-gray-600 border-2 hover:scale-105 transition duration-200">
+                {showGithubStats ? 'Hide Github Stats' : 'Show Github Stats'}
               </Button>
               {
                 project.documentation && <Link href={project.documentation} target="_blank"
@@ -142,7 +144,11 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
             </div>
           </div>
         </div>
-
+        {showGithubStats && (
+          <div>
+            <GithubStats github_repo={project.github_repo} />
+          </div>
+        )}
         <div className="mt-6">
           <CommentSection projectId={project.id} />
         </div>

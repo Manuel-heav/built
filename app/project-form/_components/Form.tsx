@@ -81,6 +81,7 @@ export default function ProjectSubmissionForm() {
     setSubmitError(null);
     const projectValues = {
       ...values,
+      telegram_channel: values.telegram_channel ? `https://t.me/${values.telegram_channel.replace('@', '')}` : null,
       user_id: session?.user.id,
     };
 
@@ -98,9 +99,8 @@ export default function ProjectSubmissionForm() {
       }
       router.push("/");
 
-      console.log(values);
 
-      toast("Project Succesffully Submitted");
+      toast("Project Successfully Submitted");
 
       form.reset();
       setImagePreview(null);
