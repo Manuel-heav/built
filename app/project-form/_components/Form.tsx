@@ -72,6 +72,7 @@ export default function ProjectSubmissionForm() {
       github_repo: "",
       live_demo: "",
       telegram_channel: "",
+      documentation: "",
     },
   });
 
@@ -79,23 +80,23 @@ export default function ProjectSubmissionForm() {
     setIsSubmitting(true);
     setSubmitError(null);
     const projectValues = {
-    ...values, user_id: session?.user.id 
-    }
+      ...values,
+      user_id: session?.user.id,
+    };
 
     try {
-      const response = await fetch('/api/projects', {
-        method: 'POST',
+      const response = await fetch("/api/projects", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(projectValues),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to submit project');
+        throw new Error("Failed to submit project");
       }
-      router.push("/")
-
+      router.push("/");
 
       console.log(values);
 
@@ -245,10 +246,7 @@ export default function ProjectSubmissionForm() {
                           onClick={() => {
                             const updatedTags = field.value.includes(tag.title)
                               ? field.value.filter((t) => t !== tag.title)
-                              : [
-                                  ...field.value,
-                                  tag.title,
-                                ];
+                              : [...field.value, tag.title];
                             field.onChange(updatedTags);
                           }}
                         />
@@ -309,6 +307,26 @@ export default function ProjectSubmissionForm() {
                   <FormControl>
                     <Input
                       placeholder="Enter Telegram channel (@DagmawiBabi)"
+                      {...field}
+                      className="bg-[#25252b] text-white border-[#35353d] focus:border-[#4d4d57] focus:ring-[#4d4d57]"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-[#ff6b6b]" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="documentation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white">
+                    Documentation (Optional)
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter Documentation URL"
                       {...field}
                       className="bg-[#25252b] text-white border-[#35353d] focus:border-[#4d4d57] focus:ring-[#4d4d57]"
                     />

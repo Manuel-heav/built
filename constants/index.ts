@@ -48,7 +48,7 @@ export const tags: TagTypes[] = [
   },
   {
     id: 16,
-    title: "Machine Learning",
+    title: "ML",
     url: "/machine-learning",
   },
   {

@@ -17,4 +17,5 @@ export const formSchema = z.object({
   github_repo: z.string().url("Please provide a valid GitHub repository URL"),
   live_demo: z.string().url("Please provide a valid live demo URL"),
   telegram_channel: z.string().optional(),
+  documentation: z.string().optional(),
 });

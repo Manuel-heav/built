@@ -22,6 +22,7 @@ app.post("/projects", async (c) => {
     github_repo,
     live_demo,
     telegram_channel,
+    documentation
   } = await c.req.json();
 
   const id = uuidv4();
@@ -37,6 +38,7 @@ app.post("/projects", async (c) => {
       github_repo: github_repo,
       live_demo: live_demo,
       telegram_channel: telegram_channel,
+      documentation: documentation,
     },
   ]);
 
