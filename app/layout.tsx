@@ -16,12 +16,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="absolute inset-0 -z-10 h-full w-full bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]">
-        <Loglib
-          config={{
-            id: "built",
-          }}
-        />
         {children}
+        <Loglib
+                    config={{
+                        id: "built-iota_vercel",
+                    }}
+                />
         <Toaster position="top-right" />
       </body>
     </html>
