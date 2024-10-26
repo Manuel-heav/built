@@ -16,7 +16,7 @@
 - [x] Make auth work in production
 - [ ] Polish UI and Code
  - [x] 1. Login salareg it allows me to like. So disable bidereg or sign in minamin bilo biteyk it's nice
- - [ ] 2. We need more tags
+ - [x] 2. We need more tags
  - [ ] 3. LeDocumentation degmo optional field binor. 
  - [ ] 4. Also github link sasgeba I think you should automate getting the number of stars, description minamin that'd be advanced
  - [ ] 5. Sorting binorew, specially by likes or github stars
