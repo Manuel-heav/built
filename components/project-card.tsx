@@ -125,9 +125,12 @@ const ProjectCard = ({
               <Link href={github_repo}>
                 <GithubIcon />
               </Link>
-              <Link href={telegram_channel}>
+              {
+                telegram_channel && <Link href={telegram_channel}>
                 <TelegramIcon />
               </Link>
+              
+              }
               <Link href={live_demo}>
                 <ArrowUpRightIcon className="h-5" />
               </Link>
