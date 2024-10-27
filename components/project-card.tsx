@@ -86,9 +86,9 @@ const ProjectCard = ({
             alt={title}
           />
         </Link>
-        <div className="px-2 flex justify-between flex-col h-28">
+        <div className="px-2 flex justify-between flex-col h-full">
           <div className="flex gap-2 pt-4 items-end">
-            <h1>{title}</h1>
+            <h1 className="break-words">{title}</h1>
             <p className="text-xs text-[#85868d]">{tags.join(", ")}</p>
           </div>
           <div>
