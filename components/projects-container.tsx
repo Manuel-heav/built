@@ -12,7 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
+import {ArrowDownWideNarrowIcon, ArrowUpWideNarrowIcon } from "lucide-react";
 import { Button } from "./ui/button";
 
 const SkeletonProjectCard = () => {
@@ -116,8 +116,8 @@ const ProjectsContainer = () => {
             </div>
             <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-full sm:w-auto bg-transparent text-[#85868d] border-[#616165]">
-                Sort by Likes {sortOrder === "asc" ? <ArrowUpIcon className="ml-2 h-4 w-4" /> : <ArrowDownIcon className="ml-2 h-4 w-4" />}
+              <Button variant="outline" className="w-full bg-transparent text-[#85868d] border-[#616165] duration-300 transition">
+                <p className="hidden md:flex">Sort by Likes</p> {sortOrder === "asc" ? <ArrowUpWideNarrowIcon className="ml-2 h-6 w-6" /> : <ArrowDownWideNarrowIcon className="ml-2 h-6 w-6" />}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

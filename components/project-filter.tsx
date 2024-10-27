@@ -19,7 +19,7 @@ const ProjectFilter = ({ selectedTag, setSelectedTag }: ProjectFilterProps) => {
   };
 
   return (
-    <div className="flex flex-wrap gap-4">
+    <div className="flex justify-center flex-wrap gap-4">
       <button
         onClick={() => setSelectedTag(null)}
         className={cn(
