@@ -9,7 +9,7 @@ export const formSchema = z.object({
     .string()
     .min(10, "Description must be at least 10 characters")
     .max(500, "Description must be less than 500 characters"),
-  imageUrl: z.string().url("Please provide a valid URL for the image"),
+  image_url: z.string().url("Please provide a valid URL for the image"),
   tags: z
     .array(z.string())
     .min(1, "Please select at least one tag")

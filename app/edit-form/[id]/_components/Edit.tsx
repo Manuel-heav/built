@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -25,7 +25,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { formSchema } from "@/schema";
-import { TagTypes } from "@/types";
+import { ProjectType, TagTypes } from "@/types";
 import { tags } from "@/constants";
 
 const TagButton = ({
@@ -55,39 +55,74 @@ const TagButton = ({
   </motion.button>
 );
 
-export default function ProjectSubmissionForm() {
+export default function ProjectEditForm({project_id}: {project_id:string}) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [project, setProject] = useState<ProjectType | null>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const { data: session } = authClient.useSession();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/api/project/${project_id}`);
+        const data = await response.json();
+        setProject(data.project[0]);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching project:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [project_id]);
+
+  console.log(project)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      image_url: "",
-      tags: [],
-      github_repo: "",
-      live_demo: "",
-      telegram_channel: "",
-      documentation: "",
+      title: project?.title || '',
+      description: project?.description || '',
+      image_url: project?.image_url || '',
+      tags: project?.tags || [],
+      github_repo: project?.github_repo || '',
+      live_demo:project?.live_demo || '',
+      telegram_channel: project?.telegram_channel || '',
+      documentation: project?.documentation || '',
     },
   });
+
+  useEffect(() => {
+    if (project) {
+      form.reset({
+        title: project.title,
+        description: project.description,
+        image_url: project.image_url,
+        tags: project.tags,
+        github_repo: project.github_repo,
+        live_demo: project.live_demo,
+        telegram_channel: project.telegram_channel,
+        documentation: project.documentation,
+      });
+      setImagePreview(project?.image_url)
+    }
+  }, [project]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     setSubmitError(null);
     const projectValues = {
       ...values,
-      telegram_channel: values.telegram_channel ? `https://t.me/${values.telegram_channel.replace('@', '')}` : null,
       user_id: session?.user.id,
     };
 
     try {
-      const response = await fetch("/api/projects", {
-        method: "POST",
+      const response = await fetch(`/api/project/${project_id}`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -100,13 +135,13 @@ export default function ProjectSubmissionForm() {
       router.push("/");
 
 
-      toast("Project Successfully Submitted");
+      toast("Project Successfully Edited");
 
       form.reset();
       setImagePreview(null);
     } catch (error) {
       setSubmitError(
-        `An error occurred while submitting the project. Please try again. ${error}`
+        `An error occurred while Editing the project. Please try again. ${error}`
       );
     } finally {
       setIsSubmitting(false);
@@ -153,7 +188,7 @@ export default function ProjectSubmissionForm() {
     <div className="min-h-screen bg-[#151519] flex items-center justify-center p-4">
       <div className="w-full max-w-2xl bg-[#1c1c21] rounded-lg shadow-xl p-8">
         <h2 className="text-3xl font-bold text-white mb-6">
-          Submit Your Project
+          Edit Your Project
         </h2>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -242,9 +277,9 @@ export default function ProjectSubmissionForm() {
                         <TagButton
                           key={tag.id}
                           tag={tag.title}
-                          selected={field.value.includes(tag.title)}
+                          selected={field.value && field.value.includes(tag.title)}
                           onClick={() => {
-                            const updatedTags = field.value.includes(tag.title)
+                            const updatedTags = field.value && field.value.includes(tag.title)
                               ? field.value.filter((t) => t !== tag.title)
                               : [...field.value, tag.title];
                             field.onChange(updatedTags);
@@ -350,7 +385,7 @@ export default function ProjectSubmissionForm() {
               className="px-4 py-2 rounded-lg w-full bg-white text-[#3a3a43] cursor-pointer transition duration-700 hover:shadow-[0_0_50px_15px_rgba(255,255,255,0.1),0_0_100px_40px_rgba(255,255,255,0.1)]"
               disabled={isSubmitting}
             >
-              {isSubmitting ? <Spinner size="small" /> : "Submit Project"}
+              {isSubmitting ? <Spinner size="small" /> : "Edit Project"}
             </button>
           </form>
         </Form>

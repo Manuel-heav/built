@@ -4,8 +4,10 @@ import Container from "@/components/container";
 import GithubStats from "@/components/github-stats";
 import { GithubIcon, TelegramIcon } from "@/components/icons/icons";
 import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
 import { ProjectType } from "@/types";
 import { ArrowUpRightIcon } from "@heroicons/react/16/solid";
+import { EditIcon } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
@@ -19,6 +21,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
   const { id } = params;
   const [project, setProject] = useState<ProjectType | null>(null);
   const [loading, setLoading] = useState(true);
+  const { data: session } = authClient.useSession();
   const [showGithubStats, setShowGithubStats] = useState(false);
 
   useEffect(() => {
@@ -84,6 +87,14 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
 
           <div className="flex flex-col justify-center md:w-1/3">
             <div>
+              {project.user_id === session?.user.id && (
+                <Link href={`/edit-form/${project.id}`}>
+                  <div className="flex gap-2 pb-3">
+                    <EditIcon className="text-gray-500" />
+                    <p className="text-gray-500">Edit Project</p>
+                  </div>
+                </Link>
+              )}
               <h2 className="text-2xl font-bold">{project.title}</h2>
               <p className="text-gray-500 mt-2">{project.description}</p>
               {project.tags && project.tags.length > 0 && (
@@ -132,15 +143,23 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
             </div>
 
             <div className="mt-5 flex gap-2">
-              <Button onClick={() => setShowGithubStats(!showGithubStats)} className="border-gray-600 border-2 hover:scale-105 transition duration-200">
-                {showGithubStats ? 'Hide Github Stats' : 'Show Github Stats'}
+              <Button
+                onClick={() => setShowGithubStats(!showGithubStats)}
+                className="border-gray-600 border-2 hover:scale-105 transition duration-200"
+              >
+                {showGithubStats ? "Hide Github Stats" : "Show Github Stats"}
               </Button>
-              {
-                project.documentation && <Link href={project.documentation} target="_blank"
-                rel="noopener noreferrer">
-                  <Button className="bg-white text-black hover:scale-105 hover:bg-white hover:text-black transition duration-200">See Docs</Button>
+              {project.documentation && (
+                <Link
+                  href={project.documentation}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button className="bg-white text-black hover:scale-105 hover:bg-white hover:text-black transition duration-200">
+                    See Docs
+                  </Button>
                 </Link>
-              }
+              )}
             </div>
           </div>
         </div>

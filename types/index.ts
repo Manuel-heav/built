@@ -5,6 +5,7 @@ export interface TagTypes {
 }
 
 export interface ProjectType {
+  user_id: string;
   documentation:string;
   description: string;
   id: string;

@@ -23,4 +23,23 @@ app.get("/project/:id", async (c) => {
   return c.json({ project: data });
 });
 
+app.patch("/project/:id", async (c) => {
+  const { id } = c.req.param();
+  const updates = await c.req.json();
+
+  console.log("PATCH request updates:", updates);  
+  const { error } = await supabase
+    .from("projects")
+    .update(updates)
+    .eq("id", id);
+
+  if (error) {
+    console.error("Supabase error:", error.message);  
+    return c.json({ error: error.message }, 400);
+  }
+
+  return c.json({ message: "Project updated successfully" });
+});
+
+export const PATCH = handle(app);
 export const GET = handle(app);
