@@ -7,6 +7,10 @@ import { Analytics } from '@vercel/analytics/react';
 export const metadata: Metadata = {
   title: "Built | Projects for developers",
   description: "Where you find all the best projects",
+  icons: {
+    icon: "/favicon.ico",                   
+    shortcut: "/favicon.ico",              
+  },
 };
 
 export default function RootLayout({
