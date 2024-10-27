@@ -60,7 +60,6 @@ export default function ProjectEditForm({project_id}: {project_id:string}) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [project, setProject] = useState<ProjectType | null>(null);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const { data: session } = authClient.useSession();
 
@@ -70,10 +69,8 @@ export default function ProjectEditForm({project_id}: {project_id:string}) {
         const response = await fetch(`/api/project/${project_id}`);
         const data = await response.json();
         setProject(data.project[0]);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching project:", error);
-        setLoading(false);
       }
     };
 

@@ -6,7 +6,6 @@ import { GithubIcon, TelegramIcon } from "@/components/icons/icons";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import { ProjectType } from "@/types";
-import { ArrowUpRightIcon } from "@heroicons/react/16/solid";
 import { EditIcon } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -22,7 +21,6 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
   const [project, setProject] = useState<ProjectType | null>(null);
   const [loading, setLoading] = useState(true);
   const { data: session } = authClient.useSession();
-  const [showGithubStats, setShowGithubStats] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,8 +88,8 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
               {project.user_id === session?.user.id && (
                 <Link href={`/edit-form/${project.id}`}>
                   <div className="flex gap-2 pb-3">
-                    <EditIcon className="text-gray-500" />
-                    <p className="text-gray-500">Edit Project</p>
+                    <EditIcon className="text-gray-500 h-6" />
+                    <p className="text-gray-500 text-sm">Edit Project</p>
                   </div>
                 </Link>
               )}
@@ -130,25 +128,21 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
                   <TelegramIcon />
                 </Link>
               )}
-              {project.live_demo && (
+            </div>
+
+            <div className="mt-5 flex gap-2">
                 <Link
                   href={project.live_demo}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-600 hover:text-white transition-colors"
                 >
-                  <ArrowUpRightIcon className="h-5 w-5" />
-                </Link>
-              )}
-            </div>
-
-            <div className="mt-5 flex gap-2">
               <Button
-                onClick={() => setShowGithubStats(!showGithubStats)}
                 className="border-gray-600 border-2 hover:scale-105 transition duration-200"
               >
-                {showGithubStats ? "Hide Github Stats" : "Show Github Stats"}
+                Live Demo
               </Button>
+              </Link>
               {project.documentation && (
                 <Link
                   href={project.documentation}
@@ -163,11 +157,9 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
             </div>
           </div>
         </div>
-        {showGithubStats && (
           <div>
             <GithubStats github_repo={project.github_repo} />
           </div>
-        )}
         <div className="mt-6">
           <CommentSection projectId={project.id} />
         </div>

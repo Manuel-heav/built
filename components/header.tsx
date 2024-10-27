@@ -20,7 +20,7 @@ const Header = () => {
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center gap-1">
             <LightBulbIcon className="md:h-6 h-8" />
-            <h1 className="hidden md:block text-2xl font-bold">Built</h1>
+            <h1 className="text-xl md:text-2xl font-bold">Built</h1>
           </Link>
 
           <div className="flex items-center gap-5">
@@ -34,7 +34,8 @@ const Header = () => {
                   <button className="btn-primary">Post Your Project</button>
                 </Link>
                 <Link href="/project-form" className="md:hidden">
-                  <button className="btn-primary">
+                  <button className="btn-primary flex items-center gap-2">
+                    Post
                     <ArrowUpTrayIcon className="h-5" />
                   </button>
                 </Link>
@@ -47,7 +48,7 @@ const Header = () => {
               target="_blank"
             >
               <GithubIcon />
-              <p>Star</p>
+              <p className="hidden md:block">Star</p>
             </Link>
             {session && (
               <div

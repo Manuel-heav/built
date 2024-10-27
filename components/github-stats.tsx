@@ -55,8 +55,8 @@ export default function GithubStats({ github_repo }: { github_repo: string }) {
   )
 
   return (
-    <div className="max-w-3xl p-4 bg-[#1c1c21] rounded-lg shadow-sm">
-      <h2 className="text-2xl font-bold mb-4 flex items-center text-white">
+    <div className="max-w-full p-4 bg-[#1c1c21] rounded-lg shadow-sm">
+      <h2 className="md:text-2xl text-xl font-bold mb-4 flex items-center text-white">
         <Github className="mr-2" />
         GitHub Repository Stats
       </h2>
@@ -68,10 +68,10 @@ export default function GithubStats({ github_repo }: { github_repo: string }) {
         </div>
       ) : repoStats && (
         <>
-          <a href={github_repo} target="_blank" rel="noopener noreferrer" className="text-custom-200 hover:text-white transition-colors duration-200">
+          <a href={github_repo} target="_blank" rel="noopener noreferrer" className="text-custom-200 hover:text-white transition-colors duration-200 md:text-base text-sm ">
             {github_repo}
           </a>
-          <p className="mt-2 text-white">{repoStats.description}</p>
+          <p className="md:text-base text-sm mt-2 text-white">{repoStats.description}</p>
           <div className="grid grid-cols-2 gap-4 mt-4">
             <div className="flex items-center text-custom-200">
               <Star className="w-5 h-5 mr-2 text-yellow-500" />

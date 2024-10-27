@@ -123,7 +123,7 @@ export default function CommentSection({ projectId }: CommentProps) {
   }
 
   return (
-    <div className="max-w-3xl p-4">
+    <div className="max-w-full">
       <h2 className="text-2xl font-bold mb-4 flex items-center text-white">
         <MessageSquare className="mr-2" />
         Comments

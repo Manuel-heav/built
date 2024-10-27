@@ -75,7 +75,7 @@ const ProjectCard = ({
   };
 
   return (
-    <div className="hover:scale-105 hover:shadow-2xl hover:bg-gradient-to-r hover:from-[#24242a] hover:to-[#33333b] pb-4 rounded-lg duration-200">
+    <div className="hover:scale-105 hover:shadow-2xl hover:bg-gradient-to-r hover:from-[#24242a] hover:to-[#33333b] pb-4 rounded-lg duration-200 shadow-[#33333b] shadow-md">
       <div>
         <Link href={`/project/${id}`}>
           <Image
@@ -88,8 +88,8 @@ const ProjectCard = ({
         </Link>
         <div className="px-2 flex justify-between flex-col h-full">
           <div className="flex gap-2 pt-4 items-end">
-            <h1 className="break-words">{title}</h1>
-            <p className="text-xs text-[#85868d]">{tags.join(", ")}</p>
+            <h1 className="break-words truncate">{title}</h1>
+            <p className="text-xs text-[#85868d] truncate">{tags.join(", ")}</p>
           </div>
           <div>
             <p className="text-sm text-[#85868d] py-2">
