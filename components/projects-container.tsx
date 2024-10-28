@@ -108,7 +108,7 @@ const ProjectsContainer = () => {
               <MagnifyingGlassIcon className="h-5" />
               <input
                 type="text"
-                placeholder="Search for projects"
+                placeholder={`Search from ${projects.length} projects`}
                 className="bg-transparent text-[#f0f0f0] focus:outline-none text-sm border-gray-300"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
