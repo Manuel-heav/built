@@ -87,15 +87,15 @@ const ProjectCard = ({
           />
         </Link>
         <div className="px-2 flex justify-between flex-col h-28">
-          <div className="flex gap-2 pt-4 items-end">
+          <Link href={`/project/${id}`} className="flex gap-2 pt-4 items-end">
             <h1 className="break-words truncate">{title}</h1>
             <p className="text-xs text-[#85868d] truncate">{tags.join(", ")}</p>
-          </div>
-          <div>
+          </Link>
+          <Link href={`/project/${id}`}>
             <p className="text-sm text-[#85868d] py-2">
               {truncateDescription(description)}
             </p>
-          </div>
+          </Link>
 
           <div className="flex justify-between">
             <div className="flex gap-4">
@@ -115,10 +115,10 @@ const ProjectCard = ({
                 <p>{likes}</p>
               </div>
 
-              <div className="flex gap-1 items-center">
+              <Link href={`/project/${id}`} className="flex gap-1 items-center">
                 <ChatBubbleBottomCenterIcon className="h-5 cursor-pointer" />
                 <p>{comments}</p>
-              </div>
+              </Link>
             </div>
 
             <div className="flex gap-3 items-center">
