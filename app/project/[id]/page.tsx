@@ -77,7 +77,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
         <div className="flex flex-col md:flex-row gap-6">
           <div className="md:w-3/5">
             <img
-              src={project.image_url}
+              src={project.image_url ? project.image_url : "https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled.png"}
               alt={`Project ${project.title}`}
               className="w-full h-auto rounded-lg object-cover"
             />

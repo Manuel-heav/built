@@ -82,11 +82,11 @@ const ProjectCard = ({
             className="cursor-pointer border border-gray-800 rounded-sm overflow-hidden h-40 object-cover"
             width={500}
             height={300}
-            src={image_url}
+            src={image_url ? image_url : "https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled.png"}
             alt={title}
           />
         </Link>
-        <div className="px-2 flex justify-between flex-col h-full">
+        <div className="px-2 flex justify-between flex-col h-28">
           <div className="flex gap-2 pt-4 items-end">
             <h1 className="break-words truncate">{title}</h1>
             <p className="text-xs text-[#85868d] truncate">{tags.join(", ")}</p>

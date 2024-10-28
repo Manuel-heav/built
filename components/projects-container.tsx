@@ -137,7 +137,7 @@ const ProjectsContainer = () => {
           selectedTag={selectedTag}
           setSelectedTag={setSelectedTag}
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 py-6">
           {loading ? (
             Array(6)
               .fill(0)
