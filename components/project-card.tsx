@@ -122,16 +122,16 @@ const ProjectCard = ({
             </div>
 
             <div className="flex gap-3 items-center">
-              <Link href={github_repo}>
+              <Link href={github_repo} target="_blank">
                 <GithubIcon />
               </Link>
               {
-                telegram_channel && <Link href={telegram_channel}>
+                telegram_channel && <Link href={telegram_channel} target="_blank">
                 <TelegramIcon />
               </Link>
               
               }
-              <Link href={live_demo}>
+              <Link href={live_demo} target="_blank">
                 <ArrowUpRightIcon className="h-5" />
               </Link>
             </div>
