@@ -11,9 +11,10 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {ArrowDownWideNarrowIcon, ArrowUpWideNarrowIcon } from "lucide-react";
+} from "@/components/ui/dropdown-menu";
+import { ArrowDownWideNarrowIcon, ArrowUpWideNarrowIcon } from "lucide-react";
 import { Button } from "./ui/button";
+import NothingHere from "./nothing-here";
 
 const SkeletonProjectCard = () => {
   return (
@@ -28,13 +29,11 @@ const SkeletonProjectCard = () => {
 const ProjectsContainer = () => {
   const [projects, setProjects] = useState<ProjectType[]>([]);
   const [loading, setLoading] = useState(true);
-  const [likedProjectIds, setLikedProjectIds] = useState<Set<string>>(
-    new Set()
-  );
+  const [likedProjectIds, setLikedProjectIds] = useState<Set<string>>(new Set());
   const [filteredProjects, setFilteredProjects] = useState<ProjectType[]>([]);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [sortOrder, setSortOrder] = useState<string>("asc");
+  const [sortOrder, setSortOrder] = useState<string>("desc");
   const { data: session } = authClient.useSession();
 
   const user_id = session?.user.id;
@@ -96,7 +95,7 @@ const ProjectsContainer = () => {
     }
 
     setFilteredProjects(filtered);
-  }, [selectedTag, searchQuery, projects, sortOrder, () => setSortOrder("desc")]);
+  }, [selectedTag, searchQuery, projects, sortOrder]);
 
   return (
     <div id="projects">
@@ -104,31 +103,31 @@ const ProjectsContainer = () => {
         <div className="flex items-center gap-5 mb-6">
           {session && (
             <div className="flex gap-2">
-            <div className="flex items-center gap-2 border-2 border-[#616165] rounded-md px-2 py-1 focus-within:border-white transition-colors duration-200">
-              <MagnifyingGlassIcon className="h-5" />
-              <input
-                type="text"
-                placeholder={`Search from ${projects.length} projects`}
-                className="bg-transparent text-[#f0f0f0] focus:outline-none text-sm border-gray-300"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-full bg-transparent text-[#85868d] border-[#616165] duration-300 transition">
-                <p className="hidden md:flex">Sort by Likes</p> {sortOrder === "asc" ? <ArrowUpWideNarrowIcon className="ml-2 h-6 w-6" /> : <ArrowDownWideNarrowIcon className="ml-2 h-6 w-6" />}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setSortOrder("asc")} className="cursor-pointer">
-                Ascending
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSortOrder("desc")}className="cursor-pointer">
-                Descending
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              <div className="flex items-center gap-2 border-2 border-[#616165] rounded-md px-2 py-1 focus-within:border-white transition-colors duration-200">
+                <MagnifyingGlassIcon className="h-5" />
+                <input
+                  type="text"
+                  placeholder={`Search from ${projects.length} projects`}
+                  className="bg-transparent text-[#f0f0f0] focus:outline-none text-sm border-gray-300"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="w-full bg-transparent text-[#85868d] border-[#616165] duration-300 transition">
+                    <p className="hidden md:flex">Sort by Likes</p> {sortOrder === "asc" ? <ArrowUpWideNarrowIcon className="ml-2 h-6 w-6" /> : <ArrowDownWideNarrowIcon className="ml-2 h-6 w-6" />}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => setSortOrder("desc")} className="cursor-pointer">
+                    Ascending
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSortOrder("asc")} className="cursor-pointer">
+                    Descending
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           )}
         </div>
@@ -137,12 +136,15 @@ const ProjectsContainer = () => {
           selectedTag={selectedTag}
           setSelectedTag={setSelectedTag}
         />
+
+        {!loading && filteredProjects.length === 0 && <NothingHere />} {/* Moved outside grid */}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 py-6">
           {loading ? (
             Array(6)
               .fill(0)
               .map((_, idx) => <SkeletonProjectCard key={idx} />)
-          ) : filteredProjects.length > 0 ? (
+          ) : (
             filteredProjects.map((project) => {
               const isLiked = likedProjectIds.has(project.id);
 
@@ -163,8 +165,6 @@ const ProjectsContainer = () => {
                 />
               );
             })
-          ) : (
-            <div className="p-4">Nothing here 🥴</div>
           )}
         </div>
       </Container>

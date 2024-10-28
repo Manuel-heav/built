@@ -47,9 +47,9 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
       if (!response.ok) {
         throw new Error('Failed to delete project');
       }
-      toast('Project deleted successfully');
+      toast('Project Deleted Successfully');
     } catch (error) {
-      toast(`Error deleting project: ${error}`);
+      toast(`Error Deleting Project: ${error}`);
     }finally{
         setDeleteLoading(false);
         router.push("/")
