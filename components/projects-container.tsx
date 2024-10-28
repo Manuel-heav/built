@@ -96,7 +96,7 @@ const ProjectsContainer = () => {
     }
 
     setFilteredProjects(filtered);
-  }, [selectedTag, searchQuery, projects, sortOrder]);
+  }, [selectedTag, searchQuery, projects, sortOrder, () => setSortOrder("desc")]);
 
   return (
     <div id="projects">

@@ -9,7 +9,6 @@ import React from "react";
 
 const Home = () => {
   const { data: session, isPending } = authClient.useSession();
-  console.log(session)
 
   if (isPending) {
     return <BulbLoading />;

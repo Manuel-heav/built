@@ -6,9 +6,20 @@ import { GithubIcon, TelegramIcon } from "@/components/icons/icons";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import { ProjectType } from "@/types";
-import { EditIcon } from "lucide-react";
+import { EditIcon, Trash2Icon } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface ProjectDetailPageProps {
   params: {
@@ -20,7 +31,30 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
   const { id } = params;
   const [project, setProject] = useState<ProjectType | null>(null);
   const [loading, setLoading] = useState(true);
+  const [deleteLoading, setDeleteLoading] = useState(false)
   const { data: session } = authClient.useSession();
+  const router = useRouter()
+
+  const handleDelete = async (id: string) => {
+    console.log("Delete started")
+    setDeleteLoading(true)
+    try {
+      const response = await fetch(`/api/project/${id}`, {
+        method: 'DELETE',
+      });
+
+      console.log(response)
+      if (!response.ok) {
+        throw new Error('Failed to delete project');
+      }
+      toast('Project deleted successfully');
+    } catch (error) {
+      toast(`Error deleting project: ${error}`);
+    }finally{
+        setDeleteLoading(false);
+        router.push("/")
+    }
+  } 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,7 +111,11 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
         <div className="flex flex-col md:flex-row gap-6">
           <div className="md:w-3/5">
             <img
-              src={project.image_url ? project.image_url : "https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled.png"}
+              src={
+                project.image_url
+                  ? project.image_url
+                  : "https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled.png"
+              }
               alt={`Project ${project.title}`}
               className="w-full h-auto rounded-lg object-cover"
             />
@@ -86,12 +124,35 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
           <div className="flex flex-col justify-center md:w-1/3">
             <div>
               {project.user_id === session?.user.id && (
-                <Link href={`/edit-form/${project.id}`}>
-                  <div className="flex gap-2 pb-3">
-                    <EditIcon className="text-gray-500 h-6" />
-                    <p className="text-gray-500 text-sm">Edit Project</p>
-                  </div>
-                </Link>
+                <div className="flex gap-10">
+                  <Link href={`/edit-form/${project.id}`}>
+                    <div className="flex gap-1 pb-3">
+                      <EditIcon className="text-gray-500 h-5" />
+                      <p className="text-gray-500 text-sm">Edit Project</p>
+                    </div>
+                  </Link>
+                  <Dialog>
+                    <DialogTrigger>
+                      <div className="items-center flex gap-1 pb-3">
+                        <Trash2Icon className="text-red-400 h-5" />
+                        <p className="text-red-400 text-sm">Delete Project</p>
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent className="bg-[#1c1c21] text-gray-300 border-none">
+                      <DialogHeader>
+                        <DialogTitle className="text-white py-2">Are you absolutely sure?</DialogTitle>
+                        <DialogDescription className="text-gray-300">
+                          This action cannot be undone. This will permanently
+                          delete your project and remove your data from our
+                          servers.
+                        </DialogDescription>
+                      </DialogHeader>
+                    <DialogFooter>
+                    <Button onClick={() => handleDelete(project.id)} disabled={deleteLoading} className="border-red-400 border text-red-400">{deleteLoading ? "Deleting" : "Delete"}</Button>
+                    </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
               )}
               <h2 className="text-2xl font-bold">{project.title}</h2>
               <p className="text-gray-500 mt-2">{project.description}</p>
@@ -131,17 +192,15 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
             </div>
 
             <div className="mt-5 flex gap-2">
-                <Link
-                  href={project.live_demo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-600 hover:text-white transition-colors"
-                >
-              <Button
-                className="border-gray-600 border-2 hover:scale-105 transition duration-200"
+              <Link
+                href={project.live_demo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-600 hover:text-white transition-colors"
               >
-                Live Demo
-              </Button>
+                <Button className="border-gray-600 border-2 hover:scale-105 transition duration-200">
+                  Live Demo
+                </Button>
               </Link>
               {project.documentation && (
                 <Link
@@ -157,9 +216,9 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
             </div>
           </div>
         </div>
-          <div>
-            <GithubStats github_repo={project.github_repo} />
-          </div>
+        <div>
+          <GithubStats github_repo={project.github_repo} />
+        </div>
         <div className="mt-6">
           <CommentSection projectId={project.id} />
         </div>

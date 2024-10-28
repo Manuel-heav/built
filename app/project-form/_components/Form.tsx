@@ -85,7 +85,6 @@ export default function ProjectSubmissionForm() {
       user_id: session?.user.id,
     };
 
-    console.log(projectValues)
 
     try {
       const response = await fetch("/api/projects", {

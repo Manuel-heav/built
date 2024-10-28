@@ -77,7 +77,6 @@ export default function ProjectEditForm({project_id}: {project_id:string}) {
     fetchData();
   }, [project_id]);
 
-  console.log(project)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

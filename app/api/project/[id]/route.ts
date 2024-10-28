@@ -41,5 +41,22 @@ app.patch("/project/:id", async (c) => {
   return c.json({ message: "Project updated successfully" });
 });
 
+app.delete("/project/:id", async (c) => {
+  const { id } = c.req.param();
+
+  const { error } = await supabase
+    .from("projects")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error("Supabase error:", error.message);  
+    return c.json({ error: error.message }, 400);
+  }
+
+  return c.json({ message: "Project deleted successfully" });
+});
+
 export const PATCH = handle(app);
 export const GET = handle(app);
+export const DELETE = handle(app);
