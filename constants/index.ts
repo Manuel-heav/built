@@ -2,6 +2,11 @@ import { ProjectType, TagTypes } from "@/types";
 
 export const tags: TagTypes[] = [
   {
+    id: 1,
+    title: "4DBV",
+    url: "/DB2AV",
+  },
+  {
     id: 2,
     title: "Software",
     url: "/software",
@@ -76,6 +81,7 @@ export const tags: TagTypes[] = [
     title: "Entertainment",
     url: "/entertainment",
   },
+  
   {
     id: 26,
     title: "AI",
