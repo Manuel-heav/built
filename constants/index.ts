@@ -33,8 +33,8 @@ export const tags: TagTypes[] = [
   },
   {
     id: Math.random() * 1000,
-    title: "Bots",
-    url: "/bots",
+    title: "Bot",
+    url: "/bot",
   },
   {
     id: Math.random() * 1000,
