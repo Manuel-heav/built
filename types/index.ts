@@ -8,6 +8,7 @@ export interface ProjectType {
   user_id: string;
   documentation:string;
   description: string;
+  user_name: string;
   id: string;
   image_url: string;
   title: string;

@@ -22,13 +22,15 @@ app.post("/projects", async (c) => {
     github_repo,
     live_demo,
     telegram_channel,
-    documentation
+    documentation,
+    user_name,
   } = await c.req.json();
 
   const id = uuidv4();
 
   const { data, error } = await supabase.from("projects").insert([
     {
+      user_name,
       id,
       user_id,
       title,

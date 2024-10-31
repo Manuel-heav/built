@@ -68,9 +68,10 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
         setLoading(false);
       }
     };
-
+    
     fetchData();
-  }, [id]);
+}, [id]);
+    console.log(project)
 
   if (loading) {
     return (
@@ -123,6 +124,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
 
           <div className="flex flex-col justify-center md:w-1/3">
             <div>
+                
               {project.user_id === session?.user.id && (
                 <div className="flex gap-10">
                   <Link href={`/edit-form/${project.id}`}>
@@ -156,6 +158,9 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
               )}
               <h2 className="text-2xl font-bold">{project.title}</h2>
               <p className="text-gray-500 mt-2">{project.description}</p>
+              <div>
+                    <p className="text-gray-300 text-xs pt-4">⚒️ {project.user_name}</p>
+                </div>
               {project.tags && project.tags.length > 0 && (
                 <div className="flex gap-2 mt-4">
                   {project.tags.map((tag, index) => (
@@ -214,6 +219,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
                 </Link>
               )}
             </div>
+            
           </div>
         </div>
         <div>

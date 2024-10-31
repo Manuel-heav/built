@@ -83,8 +83,8 @@ export default function ProjectSubmissionForm() {
       ...values,
       telegram_channel: values.telegram_channel ? `https://t.me/${values.telegram_channel.replace('@', '')}` : null,
       user_id: session?.user.id,
+      user_name: session?.user.name,
     };
-
 
     try {
       const response = await fetch("/api/projects", {
@@ -94,6 +94,8 @@ export default function ProjectSubmissionForm() {
         },
         body: JSON.stringify(projectValues),
       });
+
+      console.log(response)
 
       if (!response.ok) {
         throw new Error("Failed to submit project");
