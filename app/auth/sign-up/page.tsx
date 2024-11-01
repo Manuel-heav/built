@@ -64,7 +64,7 @@ export default function SignUp() {
   const signInWithGithub = async () => {
     await authClient.signIn.social({
       provider: "github",
-      callbackURL: "/auth/sign-up",
+      callbackURL: "/",
     });
   };
 
