@@ -83,7 +83,7 @@ export default function ProjectSubmissionForm() {
       ...values,
       telegram_channel: values.telegram_channel ? `https://t.me/${values.telegram_channel.replace('@', '')}` : null,
       user_id: session?.user.id,
-      user_name: session?.user.name,
+      user_name: session?.user.name
     };
 
     try {

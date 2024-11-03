@@ -3,15 +3,8 @@
 import React, { useEffect, useState } from 'react'
 import { Star, GitFork, Calendar, Info, Github } from 'lucide-react'
 import axios from 'axios'
+import { RepoStats } from '@/types'
 
-interface RepoStats {
-  stars: number
-  forks: number
-  description: string
-  lastUpdated: string
-  openIssues: number
-  language: string
-}
 
 export default function GithubStats({ github_repo }: { github_repo: string }) {
   const [repoStats, setRepoStats] = useState<RepoStats | null>(null)

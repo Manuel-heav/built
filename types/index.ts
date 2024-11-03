@@ -1,7 +1,6 @@
 export interface TagTypes {
   id: number;
   title: string;
-  url: string;
 }
 
 export interface ProjectType {
@@ -18,4 +17,14 @@ export interface ProjectType {
   telegram_channel: string;
   likes: number;
   comments: number;
+}
+
+
+export interface RepoStats {
+  stars: number
+  forks: number
+  description: string
+  lastUpdated: string
+  openIssues: number
+  language: string
 }
