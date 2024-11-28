@@ -52,7 +52,10 @@ app.post("/projects", async (c) => {
 });
 
 app.get("/projects", async (c) => {
-  const { data, error } = await supabase.from("projects").select("*");
+  const { data, error } = await supabase
+    .from("projects")
+    .select("*")
+    .order("created_at", { ascending: false }); // Sorts by date_posted in descending order
 
   if (error) {
     return c.json({ error: error.message }, 400);
@@ -64,7 +67,10 @@ app.get("/projects", async (c) => {
 app.get("/projects/:id", async (c) => {
   const { id } = c.req.param();
 
-  const { data, error } = await supabase.from("projects").select("*").eq("id", id);
+  const { data, error } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("id", id);
 
   if (error) {
     return c.json({ error: error.message }, 400);

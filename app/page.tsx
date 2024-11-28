@@ -1,27 +1,19 @@
 "use client";
-import BulbLoading from "@/components/BulbLoading";
-import Footer from "@/components/footer";
-import Header from "@/components/header";
-import Hero from "@/components/hero";
-import ProjectsContainer from "@/components/projects-container";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
-import React from "react";
 
 const Home = () => {
-  const { data: session, isPending } = authClient.useSession();
+  const router = useRouter();
+  const { isPending } = authClient.useSession();
 
-  if (isPending) {
-    return <BulbLoading />;
-  }
+  useEffect(() => {
+    if (!isPending) {
+      router.push("/projects");
+    }
+  }, [isPending, router]);
 
-  return (
-    <div>
-      <Header />
-      {!session && <Hero />}
-      <ProjectsContainer />
-      <Footer />
-    </div>
-  );
+  return null;
 };
 
 export default Home;
