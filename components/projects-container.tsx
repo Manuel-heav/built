@@ -58,7 +58,7 @@ const ProjectsContainer = () => {
 
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
-  const [sortOrder, setSortOrder] = useState<string>("desc");
+  const [sortOrder, setSortOrder] = useState<string>("");
 
   const likedProjectIds = useMemo(() => {
     if (!likedProjectsData) return new Set();
@@ -69,30 +69,59 @@ const ProjectsContainer = () => {
 
   console.log(likedProjectIds);
 
+  // const filteredProjects = useMemo(() => {
+  //   if (!projectsData?.projects) return [];
+
+  //   let projects = [...projectsData.projects];
+
+  //   if (selectedTag) {
+  //     projects = projects.filter((project: ProjectType) =>
+  //       project.tags.includes(selectedTag)
+  //     );
+  //   }
+
+  //   if (searchQuery) {
+  //     projects = projects.filter((project: ProjectType) =>
+  //       project.title.toLowerCase().includes(searchQuery.toLowerCase())
+  //     );
+  //   }
+
+  //   projects.sort((a: ProjectType, b: ProjectType) =>
+  //     sortOrder === "asc" ? a.likes - b.likes : b.likes - a.likes
+  //   );
+
+  //   return projects;
+  // }, [projectsData, selectedTag, searchQuery, sortOrder]);
+
   const filteredProjects = useMemo(() => {
     if (!projectsData?.projects) return [];
-
+  
     let projects = [...projectsData.projects];
-
+  
+    projects.sort((a: ProjectType, b: ProjectType) =>
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+  
     if (selectedTag) {
       projects = projects.filter((project: ProjectType) =>
         project.tags.includes(selectedTag)
       );
     }
-
+  
     if (searchQuery) {
       projects = projects.filter((project: ProjectType) =>
         project.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-
-    projects.sort((a: ProjectType, b: ProjectType) =>
-      sortOrder === "asc" ? a.likes - b.likes : b.likes - a.likes
-    );
-
+  
+    if (sortOrder === "asc" || sortOrder === "desc") {
+      projects.sort((a: ProjectType, b: ProjectType) =>
+        sortOrder === "asc" ? a.likes - b.likes : b.likes - a.likes
+      );
+    }
+  
     return projects;
   }, [projectsData, selectedTag, searchQuery, sortOrder]);
-
   return (
     <div id="projects">
       <Container>
