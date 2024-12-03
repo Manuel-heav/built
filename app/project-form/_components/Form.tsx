@@ -58,6 +58,7 @@ const TagButton = ({
 export default function ProjectSubmissionForm() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imageUploading, setImageUploading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const router = useRouter();
   const { data: session } = authClient.useSession();
@@ -123,6 +124,7 @@ export default function ProjectSubmissionForm() {
         toast("Image size should not exceed 2 MB");
         return;
       }
+      setImageUploading(true);
       toast("Uploading...");
       const reader = new FileReader();
       reader.onloadend = async () => {
@@ -138,6 +140,7 @@ export default function ProjectSubmissionForm() {
 
         if (error) {
           alert("Error uploading file.");
+          setImageUploading(false);
           return;
         }
 
@@ -147,6 +150,7 @@ export default function ProjectSubmissionForm() {
 
         form.setValue("image_url", fileUrl.data.publicUrl);
         toast("Upload complete!");
+        setImageUploading(false);
       };
       reader.readAsDataURL(file);
     }
@@ -350,8 +354,8 @@ export default function ProjectSubmissionForm() {
             )}
             <button
               type="submit"
-              className="px-4 py-2 rounded-lg w-full bg-white text-[#3a3a43] cursor-pointer transition duration-700 hover:shadow-[0_0_50px_15px_rgba(255,255,255,0.1),0_0_100px_40px_rgba(255,255,255,0.1)]"
-              disabled={isSubmitting}
+              className="disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-lg w-full bg-white text-[#3a3a43] cursor-pointer transition duration-700 hover:shadow-[0_0_50px_15px_rgba(255,255,255,0.1),0_0_100px_40px_rgba(255,255,255,0.1)]"
+              disabled={isSubmitting || imageUploading}
             >
               {isSubmitting ? <Spinner size="small" /> : "Submit Project"}
             </button>

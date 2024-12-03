@@ -5,7 +5,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import LogLib from "@loglib/tracker/react";
 
 export const metadata: Metadata = {
-  title: "Built | Projects for developers",
+  title: "Built | Projects For Developers",
   description: "Where you find all the best projects",
   icons: {
     icon: "/favicon.ico",
