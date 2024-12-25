@@ -114,9 +114,15 @@ const ProjectsContainer = () => {
       );
     }
   
-    if (sortOrder === "asc" || sortOrder === "desc") {
+    if (sortOrder === "likes-asc" || sortOrder === "likes-desc") {
       projects.sort((a: ProjectType, b: ProjectType) =>
-        sortOrder === "asc" ? a.likes - b.likes : b.likes - a.likes
+        sortOrder === "likes-asc" ? a.likes - b.likes : b.likes - a.likes
+      );
+    }
+
+    if (sortOrder === "comments-asc" || sortOrder === "comments-desc") {
+      projects.sort((a: ProjectType, b: ProjectType) =>
+        sortOrder === "comments-asc" ? a.comments - b.comments : b.comments - a.comments
       );
     }
   
@@ -156,10 +162,33 @@ const ProjectsContainer = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setSortOrder("asc")}>
+                <DropdownMenuItem onClick={() => setSortOrder("likes-asc")}>
                   Ascending
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSortOrder("desc")}>
+                <DropdownMenuItem onClick={() => setSortOrder("likes-desc")}>
+                  Descending
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="bg-transparent text-[#85868d] border-[#616165]"
+                >
+                  <p className="hidden md:flex">Sort by Comments</p>
+                  {sortOrder === "asc" ? (
+                    <ArrowUpWideNarrowIcon className="ml-2 h-6 w-6" />
+                  ) : (
+                    <ArrowDownWideNarrowIcon className="ml-2 h-6 w-6" />
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setSortOrder("comments-asc")}>
+                  Ascending
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSortOrder("comments-desc")}>
                   Descending
                 </DropdownMenuItem>
               </DropdownMenuContent>

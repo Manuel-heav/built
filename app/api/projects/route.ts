@@ -57,6 +57,7 @@ app.get("/projects", async (c) => {
     .select("*")
     .order("created_at", { ascending: false }); // Sorts by date_posted in descending order
 
+  console.log("api response data:", {data, error});
   if (error) {
     return c.json({ error: error.message }, 400);
   }
