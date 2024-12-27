@@ -7,7 +7,10 @@ import ProjectCard from "./project-card";
 import ProjectFilter from "./project-filter";
 import { ProjectType } from "@/types";
 import { authClient } from "@/lib/auth-client";
-import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
+import {
+  MagnifyingGlassIcon,
+  ChatBubbleLeftIcon,
+} from "@heroicons/react/16/solid";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -15,7 +18,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowUpWideNarrowIcon, ArrowDownWideNarrowIcon } from "lucide-react";
+import {
+  ArrowUpWideNarrowIcon,
+  ArrowDownWideNarrowIcon,
+  ThumbsUp,
+} from "lucide-react";
 import NothingHere from "./nothing-here";
 
 const SkeletonProjectCard = () => (
@@ -28,6 +35,7 @@ const SkeletonProjectCard = () => (
 
 const fetchProjects = async () => {
   const response = await fetch(`/api/projects`);
+  console.log(response);
   if (!response.ok) throw new Error("Failed to fetch projects");
   return response.json();
 };
@@ -69,59 +77,43 @@ const ProjectsContainer = () => {
 
   console.log(likedProjectIds);
 
-  // const filteredProjects = useMemo(() => {
-  //   if (!projectsData?.projects) return [];
-
-  //   let projects = [...projectsData.projects];
-
-  //   if (selectedTag) {
-  //     projects = projects.filter((project: ProjectType) =>
-  //       project.tags.includes(selectedTag)
-  //     );
-  //   }
-
-  //   if (searchQuery) {
-  //     projects = projects.filter((project: ProjectType) =>
-  //       project.title.toLowerCase().includes(searchQuery.toLowerCase())
-  //     );
-  //   }
-
-  //   projects.sort((a: ProjectType, b: ProjectType) =>
-  //     sortOrder === "asc" ? a.likes - b.likes : b.likes - a.likes
-  //   );
-
-  //   return projects;
-  // }, [projectsData, selectedTag, searchQuery, sortOrder]);
-
   const filteredProjects = useMemo(() => {
     if (!projectsData?.projects) return [];
-  
+
     let projects = [...projectsData.projects];
-  
-    projects.sort((a: ProjectType, b: ProjectType) =>
-      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+
+    projects.sort(
+      (a: ProjectType, b: ProjectType) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
-  
+
     if (selectedTag) {
       projects = projects.filter((project: ProjectType) =>
         project.tags.includes(selectedTag)
       );
     }
-  
+
     if (searchQuery) {
       projects = projects.filter((project: ProjectType) =>
         project.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-  
+
     if (sortOrder === "asc" || sortOrder === "desc") {
       projects.sort((a: ProjectType, b: ProjectType) =>
         sortOrder === "asc" ? a.likes - b.likes : b.likes - a.likes
       );
+    } else if (sortOrder === "comments-asc" || sortOrder === "comments-desc") {
+      projects.sort((a: ProjectType, b: ProjectType) =>
+        sortOrder === "comments-asc"
+          ? a.comments - b.comments
+          : b.comments - a.comments
+      );
     }
-  
+
     return projects;
   }, [projectsData, selectedTag, searchQuery, sortOrder]);
+
   return (
     <div id="projects">
       <Container>
@@ -145,10 +137,10 @@ const ProjectsContainer = () => {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="bg-transparent text-[#85868d] border-[#616165]"
+                  className="bg-transparent text-[#85868d] border-[#616165] flex items-center"
                 >
-                  <p className="hidden md:flex">Sort by Likes</p>
-                  {sortOrder === "asc" ? (
+                  <p className="hidden md:flex">Sort by</p>
+                  {sortOrder.includes("asc") ? (
                     <ArrowUpWideNarrowIcon className="ml-2 h-6 w-6" />
                   ) : (
                     <ArrowDownWideNarrowIcon className="ml-2 h-6 w-6" />
@@ -157,10 +149,20 @@ const ProjectsContainer = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => setSortOrder("asc")}>
-                  Ascending
+                  <ThumbsUp className="h-5 w-5 mr-2" />
+                  Likes Ascending
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setSortOrder("desc")}>
-                  Descending
+                  <ThumbsUp className="h-5 w-5 mr-2" />
+                  Likes Descending
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSortOrder("comments-asc")}>
+                  <ChatBubbleLeftIcon className="h-5 w-5 mr-2" />
+                  Comments Ascending
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSortOrder("comments-desc")}>
+                  <ChatBubbleLeftIcon className="h-5 w-5 mr-2" />
+                  Comments Descending
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
