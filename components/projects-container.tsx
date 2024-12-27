@@ -20,9 +20,9 @@ import NothingHere from "./nothing-here";
 
 const SkeletonProjectCard = () => (
   <div className="animate-pulse">
-    <div className="bg-gray-500 h-48 w-full mb-4 rounded-lg"></div>
-    <div className="h-4 bg-gray-500 w-3/4 mb-2 rounded"></div>
-    <div className="h-4 bg-gray-500 w-1/2 rounded"></div>
+    <div className="bg-muted h-48 w-full mb-4 rounded-lg"></div>
+    <div className="h-4 bg-muted w-3/4 mb-2 rounded"></div>
+    <div className="h-4 bg-muted w-1/2 rounded"></div>
   </div>
 );
 
@@ -114,28 +114,34 @@ const ProjectsContainer = () => {
       );
     }
   
-    if (sortOrder === "asc" || sortOrder === "desc") {
+    if (sortOrder === "likes-asc" || sortOrder === "likes-desc") {
       projects.sort((a: ProjectType, b: ProjectType) =>
-        sortOrder === "asc" ? a.likes - b.likes : b.likes - a.likes
+        sortOrder === "likes-asc" ? a.likes - b.likes : b.likes - a.likes
+      );
+    }
+
+    if (sortOrder === "comments-asc" || sortOrder === "comments-desc") {
+      projects.sort((a: ProjectType, b: ProjectType) =>
+        sortOrder === "comments-asc" ? a.comments - b.comments : b.comments - a.comments
       );
     }
   
     return projects;
   }, [projectsData, selectedTag, searchQuery, sortOrder]);
   return (
-    <div id="projects">
+    <div id="projects" className="bg-background">
       <Container>
         <div className="flex items-center gap-5 mb-6">
           <div className="flex gap-2">
             {/* Search Bar */}
-            <div className="flex items-center gap-2 border-2 border-[#616165] rounded-md px-2 py-1 focus-within:border-white transition-colors duration-200">
-              <MagnifyingGlassIcon className="h-5" />
+            <div className="flex items-center gap-2 border-2 border-border rounded-md px-2 py-1 focus-within:border-primary transition-colors duration-200">
+              <MagnifyingGlassIcon className="h-5 text-muted-foreground" />
               <input
                 type="text"
                 placeholder={`Search from ${
                   projectsData?.projects.length || 0
                 } projects`}
-                className="bg-transparent text-[#f0f0f0] focus:outline-none text-sm"
+                className="bg-transparent text-foreground focus:outline-none text-sm placeholder:text-muted-foreground"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -145,21 +151,54 @@ const ProjectsContainer = () => {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="bg-transparent text-[#85868d] border-[#616165]"
+                  className="bg-background hover:bg-accent text-foreground hover:text-accent-foreground border-border"
                 >
-                  <p className="hidden md:flex">Sort by Likes</p>
+                  <p className="hidden md:flex text-foreground">Sort by Likes</p>
                   {sortOrder === "asc" ? (
-                    <ArrowUpWideNarrowIcon className="ml-2 h-6 w-6" />
+                    <ArrowUpWideNarrowIcon className="ml-2 h-6 w-6 text-foreground" />
                   ) : (
-                    <ArrowDownWideNarrowIcon className="ml-2 h-6 w-6" />
+                    <ArrowDownWideNarrowIcon className="ml-2 h-6 w-6 text-foreground" />
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="bg-popover border-border">
+                <DropdownMenuItem onClick={() => setSortOrder("likes-asc")}
+                  className="text-popover-foreground hover:bg-accent hover:text-accent-foreground"
+                  >
+                  Ascending
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSortOrder("likes-desc")}
+                  className="text-popover-foreground hover:bg-accent hover:text-accent-foreground"
+                  >
+                  Descending
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="bg-background border-border hover:bg-accent hover:text-accent-foreground"
+                >
+                  <p className="hidden md:flex text-foreground">Sort by Comments</p>
+                  {sortOrder === "asc" ? (
+                    <ArrowUpWideNarrowIcon className="ml-2 h-6 w-6 text-foreground" />
+                  ) : (
+                    <ArrowDownWideNarrowIcon className="ml-2 h-6 w-6 text-foreground" />
                   )}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setSortOrder("asc")}>
+                <DropdownMenuItem 
+                onClick={() => setSortOrder("comments-asc")}
+                className="text-popover-foreground hover:bg-accent hover:text-accent-foreground"
+>
                   Ascending
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSortOrder("desc")}>
+                <DropdownMenuItem 
+                onClick={() => setSortOrder("comments-desc")}
+                className="text-popover-foreground hover:bg-accent hover:text-accent-foreground"
+>
                   Descending
                 </DropdownMenuItem>
               </DropdownMenuContent>
