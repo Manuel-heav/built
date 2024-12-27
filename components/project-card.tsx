@@ -75,7 +75,8 @@ const ProjectCard = ({
   };
 
   return (
-    <div className="hover:scale-105 hover:shadow-2xl hover:bg-gradient-to-r hover:from-[#24242a] hover:to-[#33333b] pb-4 rounded-lg duration-200 shadow-[#33333b] shadow-md">
+    <div className="hover:scale-105 hover:shadow-2xl hover:bg-gradient-to-r hover:from-muted-foreground/20 hover:to-card-to pb-4 rounded-lg duration-200 shadow-[#33333b] shadow-md">
+      
       <div>
         <Link href={`/project/${id}`}>
           <Image
@@ -86,11 +87,20 @@ const ProjectCard = ({
             alt={title}
           />
         </Link>
-        <div className="px-2 flex justify-between flex-col h-28">
-          <Link href={`/project/${id}`} className="flex gap-2 pt-4 items-end">
+        <div className="px-2 flex justify-between flex-col h-34">
+          <Link href={`/project/${id}`} className="flex gap-2 pt-4 items-end text-foreground">
             <h1 className="break-words truncate">{title}</h1>
-            <p className="text-xs text-[#85868d] truncate">{tags.join(", ")}</p>
           </Link>
+          <div className="flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="px-2 py-0.5 text-xs rounded-full bg-secondary text-secondary-foreground"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
           <Link href={`/project/${id}`}>
             <p className="text-sm text-[#85868d] py-2">
               {truncateDescription(description)}
@@ -102,32 +112,32 @@ const ProjectCard = ({
               <div className="flex gap-1 items-center">
                 {session ? (
                   <HeartIcon
-                    className={`h-5 cursor-pointer ${
-                      isLiked ? "text-red-700" : ""
+                    className={`h-5 cursor-pointer text-muted-foreground ${
+                      isLiked ? "text-red-700 hover:text-red-700" : ""
                     }`}
                     onClick={() => likeProject(id)}
                   />
                 ) : (
                   <Link href="/auth/sign-in">
-                    <HeartIcon className="h-5 cursor-pointer" />
+                    <HeartIcon className="h-5 cursor-pointer text-muted-foreground hover:text-red-700" />
                   </Link>
                 )}
-                <p>{likes}</p>
+                <p className="text-foreground">{likes}</p>
               </div>
 
               <Link href={`/project/${id}`} className="flex gap-1 items-center">
-                <ChatBubbleBottomCenterIcon className="h-5 cursor-pointer" />
-                <p>{comments}</p>
+                <ChatBubbleBottomCenterIcon className="h-5 cursor-pointer text-muted-foreground hover:text-foreground" />
+                <p className="text-foreground">{comments}</p>
               </Link>
             </div>
 
-            <div className="flex gap-3 items-center">
+            <div className="flex gap-3 items-center text-muted-foreground hover:text-foreground">
               <Link href={github_repo} target="_blank">
                 <GithubIcon />
               </Link>
               {
                 telegram_channel && <Link href={telegram_channel} target="_blank">
-                <TelegramIcon />
+                <TelegramIcon  />
               </Link>
               
               }

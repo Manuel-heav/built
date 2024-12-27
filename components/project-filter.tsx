@@ -11,11 +11,11 @@ interface ProjectFilterProps {
 const ProjectFilter = ({ selectedTag, setSelectedTag }: ProjectFilterProps) => {
 
   const isActive = (tag: string) => {
-    return selectedTag === tag ? "bg-white text-black" : "hover:text-white";
+    return selectedTag === tag ? "bg-white text-black" : "hover:text-foreground";
   };
 
   const isAllActive = () => {
-    return selectedTag === null ? "bg-white text-black" : "hover:text-white";
+    return selectedTag === null ? "bg-white text-black" : "hover:text-foreground";
   };
 
   return (
