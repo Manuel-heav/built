@@ -7,7 +7,10 @@ import ProjectCard from "./project-card";
 import ProjectFilter from "./project-filter";
 import { ProjectType } from "@/types";
 import { authClient } from "@/lib/auth-client";
-import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
+import {
+  MagnifyingGlassIcon,
+  ChatBubbleLeftIcon,
+} from "@heroicons/react/16/solid";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -15,7 +18,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowUpWideNarrowIcon, ArrowDownWideNarrowIcon } from "lucide-react";
+import {
+  ArrowUpWideNarrowIcon,
+  ArrowDownWideNarrowIcon,
+  ThumbsUp,
+} from "lucide-react";
 import NothingHere from "./nothing-here";
 
 const SkeletonProjectCard = () => (
@@ -28,6 +35,7 @@ const SkeletonProjectCard = () => (
 
 const fetchProjects = async () => {
   const response = await fetch(`/api/projects`);
+  console.log(response);
   if (!response.ok) throw new Error("Failed to fetch projects");
   return response.json();
 };
@@ -69,52 +77,31 @@ const ProjectsContainer = () => {
 
   console.log(likedProjectIds);
 
-  // const filteredProjects = useMemo(() => {
-  //   if (!projectsData?.projects) return [];
-
-  //   let projects = [...projectsData.projects];
-
-  //   if (selectedTag) {
-  //     projects = projects.filter((project: ProjectType) =>
-  //       project.tags.includes(selectedTag)
-  //     );
-  //   }
-
-  //   if (searchQuery) {
-  //     projects = projects.filter((project: ProjectType) =>
-  //       project.title.toLowerCase().includes(searchQuery.toLowerCase())
-  //     );
-  //   }
-
-  //   projects.sort((a: ProjectType, b: ProjectType) =>
-  //     sortOrder === "asc" ? a.likes - b.likes : b.likes - a.likes
-  //   );
-
-  //   return projects;
-  // }, [projectsData, selectedTag, searchQuery, sortOrder]);
-
   const filteredProjects = useMemo(() => {
     if (!projectsData?.projects) return [];
-  
+
     let projects = [...projectsData.projects];
-  
-    projects.sort((a: ProjectType, b: ProjectType) =>
-      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+
+    projects.sort(
+      (a: ProjectType, b: ProjectType) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
-  
+
     if (selectedTag) {
       projects = projects.filter((project: ProjectType) =>
         project.tags.includes(selectedTag)
       );
     }
-  
+
     if (searchQuery) {
       projects = projects.filter((project: ProjectType) =>
         project.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
+
   
     if (sortOrder === "likes-asc" || sortOrder === "likes-desc") {
+
       projects.sort((a: ProjectType, b: ProjectType) =>
         sortOrder === "likes-asc" ? a.likes - b.likes : b.likes - a.likes
       );
@@ -124,10 +111,17 @@ const ProjectsContainer = () => {
       projects.sort((a: ProjectType, b: ProjectType) =>
         sortOrder === "comments-asc" ? a.comments - b.comments : b.comments - a.comments
       );
+    } else if (sortOrder === "comments-asc" || sortOrder === "comments-desc") {
+      projects.sort((a: ProjectType, b: ProjectType) =>
+        sortOrder === "comments-asc"
+          ? a.comments - b.comments
+          : b.comments - a.comments
+      );
     }
-  
+
     return projects;
   }, [projectsData, selectedTag, searchQuery, sortOrder]);
+
   return (
     <div id="projects" className="bg-background">
       <Container>
@@ -151,6 +145,7 @@ const ProjectsContainer = () => {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
+
                   className="bg-background hover:bg-accent text-foreground hover:text-accent-foreground border-border"
                 >
                   <p className="hidden md:flex text-foreground">Sort by Likes</p>
@@ -183,12 +178,14 @@ const ProjectsContainer = () => {
                   <p className="hidden md:flex text-foreground">Sort by Comments</p>
                   {sortOrder === "asc" ? (
                     <ArrowUpWideNarrowIcon className="ml-2 h-6 w-6 text-foreground" />
+
                   ) : (
                     <ArrowDownWideNarrowIcon className="ml-2 h-6 w-6 text-foreground" />
                   )}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+
                 <DropdownMenuItem 
                 onClick={() => setSortOrder("comments-asc")}
                 className="text-popover-foreground hover:bg-accent hover:text-accent-foreground"
@@ -200,6 +197,7 @@ const ProjectsContainer = () => {
                 className="text-popover-foreground hover:bg-accent hover:text-accent-foreground"
 >
                   Descending
+
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
