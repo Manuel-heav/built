@@ -7,6 +7,7 @@ import { GithubIcon } from "./icons/icons";
 import { authClient } from "@/lib/auth-client";
 import { LogOutIcon } from "lucide-react";
 import { Spinner } from "./ui/spinner";
+import { ThemeToggle } from "./theme/theme-toggle";
 
 const Header = () => {
   const { data: session, isPending } = authClient.useSession();
@@ -19,22 +20,22 @@ const Header = () => {
       <Container>
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center gap-1">
-            <LightBulbIcon className="md:h-6 h-8" />
-            <h1 className="text-xl md:text-2xl font-bold">Built</h1>
+            <LightBulbIcon className="md:h-6 h-8 text-foreground" />
+            <h1 className="text-xl md:text-2xl font-bold text-foreground">Built</h1>
           </Link>
 
           <div className="flex items-center gap-5">
             {!session ? (
               <Link href="/auth/sign-in">
-                <button className="btn-primary">Sign In</button>
+                <button className="btn-primary border border-border">Sign In</button>
               </Link>
             ) : (
               <div>
                 <Link href="/project-form" className="hidden md:block">
-                  <button className="btn-primary">Post Your Project</button>
+                  <button className="btn-primary border border-border">Post Your Project</button>
                 </Link>
                 <Link href="/project-form" className="md:hidden">
-                  <button className="btn-primary flex items-center gap-2">
+                  <button className="btn-primary flex items-center gap-2 border border-border">
                     Post
                     <ArrowUpTrayIcon className="h-5" />
                   </button>
@@ -47,9 +48,14 @@ const Header = () => {
               href="https://github.com/Manuel-heav/built"
               target="_blank"
             >
-              <GithubIcon />
-              <p className="hidden md:block">Star</p>
+              <div className="text-foreground">
+              <GithubIcon  />
+              </div>
+              
+              
+              <p className="hidden md:block text-foreground">Star</p>
             </Link>
+            <ThemeToggle />
             {session && (
               <div
                 onClick={handleSignOut}

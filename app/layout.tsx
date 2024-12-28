@@ -3,6 +3,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import LogLib from "@loglib/tracker/react";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 
 export const metadata: Metadata = {
   title: "Built | Projects For Developers",
@@ -20,8 +21,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="absolute inset-0 -z-10 h-full w-full bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]">
-        {children}
+       <body 
+        className="absolute inset-0 -z-10 h-full w-full bg-background
+          [background-image:var(--background-pattern)]
+          [background-size:14px_24px]
+          transition-colors duration-300"
+      >
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
         <GoogleAnalytics gaId="G-YLFT1NCPY2" />
         <LogLib
           config={{

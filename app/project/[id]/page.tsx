@@ -129,7 +129,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
                 <div className="flex gap-10">
                   <Link href={`/edit-form/${project.id}`}>
                     <div className="flex gap-1 pb-3">
-                      <EditIcon className="text-gray-500 h-5" />
+                      <EditIcon className="text-muted-foreground h-5" />
                       <p className="text-gray-500 text-sm">Edit Project</p>
                     </div>
                   </Link>
@@ -142,7 +142,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
                     </DialogTrigger>
                     <DialogContent className="bg-[#1c1c21] text-gray-300 border-none">
                       <DialogHeader>
-                        <DialogTitle className="text-white py-2">Are you absolutely sure?</DialogTitle>
+                        <DialogTitle className="text-foreground py-2">Are you absolutely sure?</DialogTitle>
                         <DialogDescription className="text-gray-300">
                           This action cannot be undone. This will permanently
                           delete your project and remove your data from our
@@ -156,7 +156,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
                   </Dialog>
                 </div>
               )}
-              <h2 className="text-2xl font-bold">{project.title}</h2>
+              <h2 className="text-2xl font-bold text-foreground">{project.title}</h2>
               <p className="text-gray-500 mt-2">{project.description}</p>
               <div>
                     <p className="text-gray-300 text-xs pt-4">⚒️ {project.user_name}</p>
@@ -166,7 +166,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
                   {project.tags.map((tag, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 bg-transparent text-xs rounded-lg text-white border-[#7e7c7c] border-[1px]"
+                      className="px-3 py-1 bg-transparent text-xs rounded-lg text-foreground border-[#7e7c7c] border-[1px]"
                     >
                       {tag}
                     </span>
@@ -181,6 +181,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
                   href={project.github_repo}
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   <GithubIcon />
                 </Link>
@@ -190,6 +191,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
                   href={project.telegram_channel}
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   <TelegramIcon />
                 </Link>
@@ -201,10 +203,9 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
                 href={project.live_demo}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-600 hover:text-white transition-colors"
+                className="text-foreground hover:text-white transition-colors"
               >
-                <Button className="border-gray-600 border-2 hover:scale-105 transition duration-200">
-                  Live Demo
+<Button className=" text-foreground bg-background border-border border hover:scale-105 hover:bg-white hover:text-black transition duration-200">                  Live Demo
                 </Button>
               </Link>
               {project.documentation && (
@@ -213,7 +214,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Button className="bg-white text-black hover:scale-105 hover:bg-white hover:text-black transition duration-200">
+                  <Button className="text-foreground bg-background border-border border hover:scale-105 hover:bg-white hover:text-black transition duration-200">
                     See Docs
                   </Button>
                 </Link>
