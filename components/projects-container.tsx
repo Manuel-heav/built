@@ -75,8 +75,6 @@ const ProjectsContainer = () => {
     );
   }, [likedProjectsData]);
 
-  console.log(likedProjectIds);
-
   const filteredProjects = useMemo(() => {
     if (!projectsData?.projects) return [];
 
@@ -99,17 +97,9 @@ const ProjectsContainer = () => {
       );
     }
 
-  
-    if (sortOrder === "likes-asc" || sortOrder === "likes-desc") {
-
+    if (sortOrder === "asc" || sortOrder === "desc") {
       projects.sort((a: ProjectType, b: ProjectType) =>
-        sortOrder === "likes-asc" ? a.likes - b.likes : b.likes - a.likes
-      );
-    }
-
-    if (sortOrder === "comments-asc" || sortOrder === "comments-desc") {
-      projects.sort((a: ProjectType, b: ProjectType) =>
-        sortOrder === "comments-asc" ? a.comments - b.comments : b.comments - a.comments
+        sortOrder === "asc" ? a.likes - b.likes : b.likes - a.likes
       );
     } else if (sortOrder === "comments-asc" || sortOrder === "comments-desc") {
       projects.sort((a: ProjectType, b: ProjectType) =>
@@ -148,8 +138,8 @@ const ProjectsContainer = () => {
 
                   className="bg-background hover:bg-accent text-foreground hover:text-accent-foreground border-border"
                 >
-                  <p className="hidden md:flex text-foreground">Sort by Likes</p>
-                  {sortOrder === "asc" ? (
+                  <p className="hidden md:flex text-foreground">Sort by</p>
+                  {sortOrder.includes("asc") ? (
                     <ArrowUpWideNarrowIcon className="ml-2 h-6 w-6 text-foreground" />
                   ) : (
                     <ArrowDownWideNarrowIcon className="ml-2 h-6 w-6 text-foreground" />
@@ -157,47 +147,21 @@ const ProjectsContainer = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-popover border-border">
-                <DropdownMenuItem onClick={() => setSortOrder("likes-asc")}
-                  className="text-popover-foreground hover:bg-accent hover:text-accent-foreground"
-                  >
-                  Ascending
+                <DropdownMenuItem onClick={() => setSortOrder("asc")} className="text-popover-foreground hover:bg-accent hover:text-accent-foreground">
+                  <ThumbsUp className="h-5 w-5 mr-2" />
+                  Likes Ascending
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSortOrder("likes-desc")}
-                  className="text-popover-foreground hover:bg-accent hover:text-accent-foreground"
-                  >
-                  Descending
+                <DropdownMenuItem onClick={() => setSortOrder("desc")} className="text-popover-foreground hover:bg-accent hover:text-accent-foreground">
+                  <ThumbsUp className="h-5 w-5 mr-2" />
+                  Likes Descending
                 </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="bg-background border-border hover:bg-accent hover:text-accent-foreground"
-                >
-                  <p className="hidden md:flex text-foreground">Sort by Comments</p>
-                  {sortOrder === "asc" ? (
-                    <ArrowUpWideNarrowIcon className="ml-2 h-6 w-6 text-foreground" />
-
-                  ) : (
-                    <ArrowDownWideNarrowIcon className="ml-2 h-6 w-6 text-foreground" />
-                  )}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-
-                <DropdownMenuItem 
-                onClick={() => setSortOrder("comments-asc")}
-                className="text-popover-foreground hover:bg-accent hover:text-accent-foreground"
->
-                  Ascending
+                <DropdownMenuItem onClick={() => setSortOrder("comments-asc")} className="text-popover-foreground hover:bg-accent hover:text-accent-foreground">
+                  <ChatBubbleLeftIcon className="h-5 w-5 mr-2" />
+                  Comments Ascending
                 </DropdownMenuItem>
-                <DropdownMenuItem 
-                onClick={() => setSortOrder("comments-desc")}
-                className="text-popover-foreground hover:bg-accent hover:text-accent-foreground"
->
-                  Descending
-
+                <DropdownMenuItem onClick={() => setSortOrder("comments-desc")} className="text-popover-foreground hover:bg-accent hover:text-accent-foreground">
+                  <ChatBubbleLeftIcon className="h-5 w-5 mr-2" />
+                  Comments Descending
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
