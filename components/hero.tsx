@@ -15,13 +15,12 @@ const Hero = () => {
   return (
     <div>
       <Spotlight
-        fill="white"
         className="-top-40 left-0 md:left-60 md:-top-20"
-
+        fill="white"
       />
       <Container>
         <div className="flex flex-col items-center justify-center h-[65vh] gap-5">
-          <h1 className="text-4xl md:text-5xl lg:text-7xl text-center w-[70%] text-foreground">
+          <h1 className="text-4xl md:text-5xl lg:text-7xl text-center w-[70%]">
             Find And Rate Your Favorite Projects.
           </h1>
           <p className="text-center text-sm md:text-xl mt-2 text-[#85868d] w-[50%]">
@@ -39,7 +38,7 @@ const Hero = () => {
           <div>
           <button
               onClick={scrollToProjects} 
-              className="flex gap-1 items-center btn-primary text-xl p-5 text-foreground border border-border"
+              className="flex gap-1 items-center btn-primary text-xl p-5"
             >
               Explore Projects
               <ChevronRightIcon className="h-5" />

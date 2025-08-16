@@ -27,9 +27,9 @@ import NothingHere from "./nothing-here";
 
 const SkeletonProjectCard = () => (
   <div className="animate-pulse">
-    <div className="bg-muted h-48 w-full mb-4 rounded-lg"></div>
-    <div className="h-4 bg-muted w-3/4 mb-2 rounded"></div>
-    <div className="h-4 bg-muted w-1/2 rounded"></div>
+    <div className="bg-gray-500 h-48 w-full mb-4 rounded-lg"></div>
+    <div className="h-4 bg-gray-500 w-3/4 mb-2 rounded"></div>
+    <div className="h-4 bg-gray-500 w-1/2 rounded"></div>
   </div>
 );
 
@@ -75,6 +75,8 @@ const ProjectsContainer = () => {
     );
   }, [likedProjectsData]);
 
+  console.log(likedProjectIds);
+
   const filteredProjects = useMemo(() => {
     if (!projectsData?.projects) return [];
 
@@ -113,19 +115,19 @@ const ProjectsContainer = () => {
   }, [projectsData, selectedTag, searchQuery, sortOrder]);
 
   return (
-    <div id="projects" className="bg-background">
+    <div id="projects">
       <Container>
         <div className="flex items-center gap-5 mb-6">
           <div className="flex gap-2">
             {/* Search Bar */}
-            <div className="flex items-center gap-2 border-2 border-border rounded-md px-2 py-1 focus-within:border-primary transition-colors duration-200">
-              <MagnifyingGlassIcon className="h-5 text-muted-foreground" />
+            <div className="flex items-center gap-2 border-2 border-[#616165] rounded-md px-2 py-1 focus-within:border-white transition-colors duration-200">
+              <MagnifyingGlassIcon className="h-5" />
               <input
                 type="text"
                 placeholder={`Search from ${
                   projectsData?.projects.length || 0
                 } projects`}
-                className="bg-transparent text-foreground focus:outline-none text-sm placeholder:text-muted-foreground"
+                className="bg-transparent text-[#f0f0f0] focus:outline-none text-sm"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -135,31 +137,30 @@ const ProjectsContainer = () => {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-
-                  className="bg-background hover:bg-accent text-foreground hover:text-accent-foreground border-border"
+                  className="bg-transparent text-[#85868d] border-[#616165] flex items-center"
                 >
-                  <p className="hidden md:flex text-foreground">Sort by</p>
+                  <p className="hidden md:flex">Sort by</p>
                   {sortOrder.includes("asc") ? (
-                    <ArrowUpWideNarrowIcon className="ml-2 h-6 w-6 text-foreground" />
+                    <ArrowUpWideNarrowIcon className="ml-2 h-6 w-6" />
                   ) : (
-                    <ArrowDownWideNarrowIcon className="ml-2 h-6 w-6 text-foreground" />
+                    <ArrowDownWideNarrowIcon className="ml-2 h-6 w-6" />
                   )}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-popover border-border">
-                <DropdownMenuItem onClick={() => setSortOrder("asc")} className="text-popover-foreground hover:bg-accent hover:text-accent-foreground">
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setSortOrder("asc")}>
                   <ThumbsUp className="h-5 w-5 mr-2" />
                   Likes Ascending
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSortOrder("desc")} className="text-popover-foreground hover:bg-accent hover:text-accent-foreground">
+                <DropdownMenuItem onClick={() => setSortOrder("desc")}>
                   <ThumbsUp className="h-5 w-5 mr-2" />
                   Likes Descending
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSortOrder("comments-asc")} className="text-popover-foreground hover:bg-accent hover:text-accent-foreground">
+                <DropdownMenuItem onClick={() => setSortOrder("comments-asc")}>
                   <ChatBubbleLeftIcon className="h-5 w-5 mr-2" />
                   Comments Ascending
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSortOrder("comments-desc")} className="text-popover-foreground hover:bg-accent hover:text-accent-foreground">
+                <DropdownMenuItem onClick={() => setSortOrder("comments-desc")}>
                   <ChatBubbleLeftIcon className="h-5 w-5 mr-2" />
                   Comments Descending
                 </DropdownMenuItem>
