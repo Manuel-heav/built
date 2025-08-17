@@ -10,8 +10,11 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
   try {
     const rows = await db.select().from(projects).where(eq(projects.id, id));
     return NextResponse.json({ project: rows });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 400 });
+  } catch (e) {
+    if (e instanceof Error) {
+      return NextResponse.json({ error: e.message }, { status: 400 });
+    }
+    return NextResponse.json({ error: "An unknown error occurred" }, { status: 400 });
   }
 }
 
@@ -21,8 +24,11 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   try {
     await db.update(projects).set(updates).where(eq(projects.id, id));
     return NextResponse.json({ message: "Project updated successfully" });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 400 });
+  } catch (e) {
+    if (e instanceof Error) {
+      return NextResponse.json({ error: e.message }, { status: 400 });
+    }
+    return NextResponse.json({ error: "An unknown error occurred" }, { status: 400 });
   }
 }
 
@@ -31,7 +37,10 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
   try {
     await db.delete(projects).where(eq(projects.id, id));
     return NextResponse.json({ message: "Project deleted successfully" });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 400 });
+  } catch (e) {
+    if (e instanceof Error) {
+      return NextResponse.json({ error: e.message }, { status: 400 });
+    }
+    return NextResponse.json({ error: "An unknown error occurred" }, { status: 400 });
   }
 }

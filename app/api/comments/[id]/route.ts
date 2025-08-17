@@ -33,7 +33,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
       {}
     );
 
-    const nestComments = (parentId: string = "root"): any[] => {
+    const nestComments = (parentId: string = "root"): CommentRow[] => {
       return (commentsByParentId[parentId] || []).map((comment: CommentRow) => ({
         ...comment,
         replies: nestComments(comment.id),
@@ -41,7 +41,10 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
     };
 
     return NextResponse.json(nestComments());
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+  } catch (e) {
+    if (e instanceof Error) {
+      return NextResponse.json({ error: e.message }, { status: 500 });
+    }
+    return NextResponse.json({ error: "An unknown error occurred" }, { status: 500 });
   }
 }

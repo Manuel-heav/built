@@ -9,7 +9,6 @@ import { ProjectType } from "@/types";
 import { authClient } from "@/lib/auth-client";
 import {
   MagnifyingGlassIcon,
-  ChatBubbleLeftIcon,
 } from "@heroicons/react/16/solid";
 import { Button } from "./ui/button";
 import {
@@ -21,7 +20,6 @@ import {
 import {
   ArrowUpWideNarrowIcon,
   ArrowDownWideNarrowIcon,
-  ThumbsUp,
 } from "lucide-react";
 import NothingHere from "./nothing-here";
 

@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { projects as projectsTable } from "@/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { desc } from "drizzle-orm";
 
 
 export async function POST(req: NextRequest) {
@@ -26,8 +26,11 @@ export async function POST(req: NextRequest) {
       })
       .returning();
     return NextResponse.json({ project: inserted });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 400 });
+  } catch (e) {
+    if (e instanceof Error) {
+      return NextResponse.json({ error: e.message }, { status: 400 });
+    }
+    return NextResponse.json({ error: "An unknown error occurred" }, { status: 400 });
   }
 }
 
@@ -35,7 +38,10 @@ export async function GET() {
   try {
     const rows = await db.select().from(projectsTable).orderBy(desc(projectsTable.createdAt));
     return NextResponse.json({ projects: rows });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 400 });
+  } catch (e) {
+    if (e instanceof Error) {
+      return NextResponse.json({ error: e.message }, { status: 400 });
+    }
+    return NextResponse.json({ error: "An unknown error occurred" }, { status: 400 });
   }
 }

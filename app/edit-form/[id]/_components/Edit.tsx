@@ -329,7 +329,7 @@ export default function ProjectEditForm({project_id}: {project_id:string}) {
             />
             <FormField
               control={form.control}
-                name="telegramChannel"
+              name="telegramChannel"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-white">

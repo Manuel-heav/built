@@ -51,7 +51,10 @@ export async function POST(req: NextRequest) {
     await db.update(projects).set({ comments: newCount }).where(eq(projects.id, projectId));
 
     return NextResponse.json({ comment: inserted });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+  } catch (e) {
+    if (e instanceof Error) {
+      return NextResponse.json({ error: e.message }, { status: 500 });
+    }
+    return NextResponse.json({ error: "An unknown error occurred" }, { status: 500 });
   }
 }

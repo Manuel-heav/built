@@ -17,8 +17,11 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
       ? await db.select().from(projects).where(inArray(projects.id, ids))
       : [];
     return NextResponse.json({ projects: rows });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 400 });
+  } catch (e) {
+    if (e instanceof Error) {
+      return NextResponse.json({ error: e.message }, { status: 500 });
+    }
+    return NextResponse.json({ error: "An unknown error occurred" }, { status: 500 });
   }
 }
 
@@ -62,7 +65,10 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
         .returning();
       return NextResponse.json({ message: "Project liked", updatedData: updated });
     }
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 400 });
-  }
+    } catch (e) {
+      if (e instanceof Error) {
+        return NextResponse.json({ error: e.message }, { status: 500 });
+      }
+      return NextResponse.json({ error: "An unknown error occurred" }, { status: 500 });
+    }
 }
