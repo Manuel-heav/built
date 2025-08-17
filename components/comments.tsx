@@ -7,11 +7,11 @@ import { MessageSquare, Send } from 'lucide-react'
 
 interface Comment {
   id: string
-  project_id: string
-  user_id: string
-  parent_id: string | null
+  projectId: string
+  userId: string
+  parentId: string | null
   content: string
-  created_at: string
+  createdAt: string
   replies?: Comment[]
   name: string
 }
@@ -53,11 +53,11 @@ export default function CommentSection({ projectId }: CommentProps) {
   
     try {
       await axios.post(`/api/comments`, {
-        project_id: projectId,
-        parent_id: parentId,
+        projectId: projectId,
+        parentId: parentId,
         content: content,
         name: session.user.name,
-        user_id: session.user.id,
+        userId: session.user.id,
       })
   
       const response = await axios.get<Comment[]>(`/api/comments/${projectId}`)
@@ -80,7 +80,7 @@ export default function CommentSection({ projectId }: CommentProps) {
         <div className="flex items-start">
           <div className="flex-1">
             <p className="font-semibold text-white">{comment.name || 'Anonymous'}</p>
-            <p className="text-sm text-custom-200">{new Date(comment.created_at).toLocaleString()}</p>
+            <p className="text-sm text-custom-200">{new Date(comment.createdAt).toLocaleString()}</p>
             <p className="mt-2 text-white">{comment.content}</p>
             <button 
               onClick={() => setReplyingTo(comment.id)}

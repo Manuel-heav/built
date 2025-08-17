@@ -64,6 +64,7 @@ const ProjectsContainer = () => {
     staleTime: 5 * 60 * 1000,
   });
 
+
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<string>("");
@@ -84,7 +85,7 @@ const ProjectsContainer = () => {
 
     projects.sort(
       (a: ProjectType, b: ProjectType) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
 
     if (selectedTag) {

@@ -13,12 +13,12 @@ import { authClient } from "@/lib/auth-client";
 interface ProjectProps {
   description: string;
   id: string;
-  image_url: string;
+  imageUrl: string;
   title: string;
   tags: string[];
-  github_repo: string;
-  live_demo: string;
-  telegram_channel: string;
+  githubRepo: string;
+  liveDemo: string;
+  telegramChannel: string;
   likes: number;
   comments: number;
   isLiked: boolean;
@@ -27,16 +27,17 @@ interface ProjectProps {
 const ProjectCard = ({
   isLiked: initialIsLiked,
   id,
-  image_url,
+  imageUrl,
   description,
   title,
   tags,
-  github_repo,
-  live_demo,
-  telegram_channel,
+  githubRepo,
+  liveDemo,
+  telegramChannel,
   likes: initialLikes,
   comments,
 }: ProjectProps) => {
+
   const { data: session } = authClient.useSession();
   const user_id = session?.user.id;
 
@@ -82,7 +83,7 @@ const ProjectCard = ({
             className="cursor-pointer border border-gray-800 rounded-sm overflow-hidden h-40 object-cover"
             width={500}
             height={300}
-            src={image_url ? image_url : "https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled.png"}
+            src={imageUrl ? imageUrl : "https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled.png"}
             alt={title}
           />
         </Link>
@@ -122,18 +123,22 @@ const ProjectCard = ({
             </div>
 
             <div className="flex gap-3 items-center">
-              <Link href={github_repo} target="_blank">
-                <GithubIcon />
-              </Link>
+            {githubRepo && (
+                <Link href={githubRepo} target="_blank">
+                  <GithubIcon />
+                </Link>
+              )}
               {
-                telegram_channel && <Link href={telegram_channel} target="_blank">
+                telegramChannel && <Link href={telegramChannel} target="_blank">
                 <TelegramIcon />
               </Link>
               
               }
-              <Link href={live_demo} target="_blank">
-                <ArrowUpRightIcon className="h-5" />
-              </Link>
+              {liveDemo && (
+                <Link href={liveDemo} target="_blank">
+                  <ArrowUpRightIcon className="h-5" />
+                </Link>
+              )}
             </div>
           </div>
         </div>

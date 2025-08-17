@@ -68,11 +68,11 @@ export default function ProjectSubmissionForm() {
     defaultValues: {
       title: "",
       description: "",
-      image_url: "",
+      imageUrl: "",
       tags: [],
-      github_repo: "",
-      live_demo: "",
-      telegram_channel: "",
+      githubRepo: "",
+      liveDemo: "",
+      telegramChannel: "",
       documentation: "",
     },
   });
@@ -82,9 +82,9 @@ export default function ProjectSubmissionForm() {
     setSubmitError(null);
     const projectValues = {
       ...values,
-      telegram_channel: values.telegram_channel ? `https://t.me/${values.telegram_channel.replace('@', '')}` : null,
-      user_id: session?.user.id,
-      user_name: session?.user.name
+      telegramChannel: values.telegramChannel ? `https://t.me/${values.telegramChannel.replace('@', '')}` : null,
+      userId: session?.user.id,
+      userName: session?.user.name
     };
 
     try {
@@ -129,7 +129,7 @@ export default function ProjectSubmissionForm() {
       const reader = new FileReader();
       reader.onloadend = async () => {
         setImagePreview(reader.result as string);
-        form.setValue("image_url", URL.createObjectURL(file));
+        form.setValue("imageUrl", URL.createObjectURL(file));
 
         const bucket = "projects";
         const randomFileName = `${Date.now()}-${file.name}`;
@@ -148,7 +148,7 @@ export default function ProjectSubmissionForm() {
           .from(bucket)
           .getPublicUrl(randomFileName);
 
-        form.setValue("image_url", fileUrl.data.publicUrl);
+        form.setValue("imageUrl", fileUrl.data.publicUrl);
         toast("Upload complete!");
         setImageUploading(false);
       };
@@ -200,7 +200,7 @@ export default function ProjectSubmissionForm() {
             />
             <FormField
               control={form.control}
-              name="image_url"
+              name="imageUrl"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-white">Thumbnail</FormLabel>
@@ -269,7 +269,7 @@ export default function ProjectSubmissionForm() {
             />
             <FormField
               control={form.control}
-              name="github_repo"
+              name="githubRepo"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-white">
@@ -288,7 +288,7 @@ export default function ProjectSubmissionForm() {
             />
             <FormField
               control={form.control}
-              name="live_demo"
+              name="liveDemo"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-white">Live Demo</FormLabel>
@@ -305,7 +305,7 @@ export default function ProjectSubmissionForm() {
             />
             <FormField
               control={form.control}
-              name="telegram_channel"
+              name="telegramChannel"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-white">

@@ -1,83 +1,41 @@
-import { Hono } from "hono";
-import { handle } from "hono/vercel";
-import { createClient } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from "uuid";
+import { NextRequest, NextResponse } from "next/server";
+import { db } from "@/lib/db";
+import { projects as projectsTable } from "@/db/schema";
+import { desc, eq } from "drizzle-orm";
 
-export const runtime = "edge";
 
-const app = new Hono().basePath("/api");
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY as string;
-
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-app.post("/projects", async (c) => {
-  const {
-    user_id,
-    title,
-    description,
-    image_url,
-    tags,
-    github_repo,
-    live_demo,
-    telegram_channel,
-    documentation,
-    user_name,
-  } = await c.req.json();
-
+export async function POST(req: NextRequest) {
+  const { userId, title, description, imageUrl, tags, githubRepo, liveDemo, telegramChannel, documentation, userName } = await req.json();
   const id = uuidv4();
-
-  const { data, error } = await supabase.from("projects").insert([
-    {
-      user_name,
-      id,
-      user_id,
-      title,
-      description,
-      image_url: image_url,
-      tags,
-      github_repo: github_repo,
-      live_demo: live_demo,
-      telegram_channel: telegram_channel,
-      documentation: documentation,
-    },
-  ]);
-
-  if (error) {
-    return c.json({ error: error.message }, 400);
+  try {
+    const inserted = await db
+      .insert(projectsTable)
+      .values({
+        id,
+        userId,
+        userName,
+        title,
+        description,
+        imageUrl,
+        tags,
+        githubRepo,
+        liveDemo,
+        telegramChannel,
+        documentation,
+      })
+      .returning();
+    return NextResponse.json({ project: inserted });
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message }, { status: 400 });
   }
+}
 
-  return c.json({ project: data });
-});
-
-app.get("/projects", async (c) => {
-  const { data, error } = await supabase
-    .from("projects")
-    .select("*")
-    .order("created_at", { ascending: false }); // Sorts by date_posted in descending order
-
-  if (error) {
-    return c.json({ error: error.message }, 400);
+export async function GET() {
+  try {
+    const rows = await db.select().from(projectsTable).orderBy(desc(projectsTable.createdAt));
+    return NextResponse.json({ projects: rows });
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message }, { status: 400 });
   }
-
-  return c.json({ projects: data });
-});
-
-app.get("/projects/:id", async (c) => {
-  const { id } = c.req.param();
-
-  const { data, error } = await supabase
-    .from("projects")
-    .select("*")
-    .eq("id", id);
-
-  if (error) {
-    return c.json({ error: error.message }, 400);
-  }
-
-  return c.json({ project: data });
-});
-
-export const POST = handle(app);
-export const GET = handle(app);
+}

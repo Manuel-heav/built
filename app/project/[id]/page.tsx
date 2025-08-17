@@ -113,8 +113,8 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
           <div className="md:w-3/5">
             <img
               src={
-                project.image_url
-                  ? project.image_url
+                project.imageUrl
+                  ? project.imageUrl
                   : "https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled.png"
               }
               alt={`Project ${project.title}`}
@@ -125,7 +125,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
           <div className="flex flex-col justify-center md:w-1/3">
             <div>
                 
-              {project.user_id === session?.user.id && (
+              {project.userId === session?.user.id && (
                 <div className="flex gap-10">
                   <Link href={`/edit-form/${project.id}`}>
                     <div className="flex gap-1 pb-3">
@@ -159,7 +159,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
               <h2 className="text-2xl font-bold">{project.title}</h2>
               <p className="text-gray-500 mt-2">{project.description}</p>
               <div>
-                    <p className="text-gray-300 text-xs pt-4">⚒️ {project.user_name}</p>
+                    <p className="text-gray-300 text-xs pt-4">⚒️ {project.userName}</p>
                 </div>
               {project.tags && project.tags.length > 0 && (
                 <div className="flex gap-2 mt-4">
@@ -176,18 +176,18 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
             </div>
 
             <div className="flex gap-3 mt-4">
-              {project.github_repo && (
+              {project.githubRepo && (
                 <Link
-                  href={project.github_repo}
+                  href={project.githubRepo}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <GithubIcon />
                 </Link>
               )}
-              {project.telegram_channel && (
+              {project.telegramChannel && (
                 <Link
-                  href={project.telegram_channel}
+                  href={project.telegramChannel}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -198,7 +198,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
 
             <div className="mt-5 flex gap-2">
               <Link
-                href={project.live_demo}
+                href={project.liveDemo}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-600 hover:text-white transition-colors"
@@ -223,7 +223,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
           </div>
         </div>
         <div>
-          <GithubStats github_repo={project.github_repo} />
+          <GithubStats githubRepo={project.githubRepo} />
         </div>
         <div className="mt-6">
           <CommentSection projectId={project.id} />

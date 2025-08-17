@@ -1,62 +1,37 @@
-import { Hono } from "hono";
-import { handle } from "hono/vercel";
-import { createClient } from "@supabase/supabase-js";
+import { NextRequest, NextResponse } from "next/server";
+import { db } from "@/lib/db";
+import { projects } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
-const app = new Hono().basePath("/api");
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY as string;
-
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-app.get("/project/:id", async (c) => {
-  const { id } = c.req.param();
-
-  const { data, error } = await supabase.from("projects").select("*").eq("id", id);
-
-  if (error) {
-    return c.json({ error: error.message }, 400);
+export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
+  const { id } = params;
+  try {
+    const rows = await db.select().from(projects).where(eq(projects.id, id));
+    return NextResponse.json({ project: rows });
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message }, { status: 400 });
   }
+}
 
-  return c.json({ project: data });
-});
-
-app.patch("/project/:id", async (c) => {
-  const { id } = c.req.param();
-  const updates = await c.req.json();
-
-  console.log("PATCH request updates:", updates);  
-  const { error } = await supabase
-    .from("projects")
-    .update(updates)
-    .eq("id", id);
-
-  if (error) {
-    console.error("Supabase error:", error.message);  
-    return c.json({ error: error.message }, 400);
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+  const { id } = params;
+  const updates = await req.json();
+  try {
+    await db.update(projects).set(updates).where(eq(projects.id, id));
+    return NextResponse.json({ message: "Project updated successfully" });
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message }, { status: 400 });
   }
+}
 
-  return c.json({ message: "Project updated successfully" });
-});
-
-app.delete("/project/:id", async (c) => {
-  const { id } = c.req.param();
-
-  const { error } = await supabase
-    .from("projects")
-    .delete()
-    .eq("id", id);
-
-  if (error) {
-    console.error("Supabase error:", error.message);  
-    return c.json({ error: error.message }, 400);
+export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+  const { id } = params;
+  try {
+    await db.delete(projects).where(eq(projects.id, id));
+    return NextResponse.json({ message: "Project deleted successfully" });
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message }, { status: 400 });
   }
-
-  return c.json({ message: "Project deleted successfully" });
-});
-
-export const PATCH = handle(app);
-export const GET = handle(app);
-export const DELETE = handle(app);
+}
