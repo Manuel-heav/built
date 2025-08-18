@@ -27,6 +27,7 @@ import { authClient } from "@/lib/auth-client";
 import { formSchema } from "@/schema";
 import { TagTypes } from "@/types";
 import { tags } from "@/constants";
+import { uploadImage } from "@/lib/minio";
 
 const TagButton = ({
   tag,
@@ -128,29 +129,17 @@ export default function ProjectSubmissionForm() {
       toast("Uploading...");
       const reader = new FileReader();
       reader.onloadend = async () => {
-        setImagePreview(reader.result as string);
-        form.setValue("imageUrl", URL.createObjectURL(file));
-
-        const bucket = "projects";
-        const randomFileName = `${Date.now()}-${file.name}`;
-
-        const { error } = await supabase.storage
-          .from(bucket)
-          .upload(randomFileName, file);
-
-        if (error) {
-          alert("Error uploading file.");
+        try {
+          setImagePreview(reader.result as string);
+          const { publicUrl } = await uploadImage(file, session?.user.id || "anonymous", file.name);
+          form.setValue("imageUrl", publicUrl);
+          toast("Upload complete!");
+        } catch (error) {
+          console.error("Error uploading image:", error);
+          toast("Failed to upload image. Please try again.");
+        } finally {
           setImageUploading(false);
-          return;
         }
-
-        const fileUrl = await supabase.storage
-          .from(bucket)
-          .getPublicUrl(randomFileName);
-
-        form.setValue("imageUrl", fileUrl.data.publicUrl);
-        toast("Upload complete!");
-        setImageUploading(false);
       };
       reader.readAsDataURL(file);
     }
