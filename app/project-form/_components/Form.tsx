@@ -21,7 +21,6 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
-import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { formSchema } from "@/schema";
