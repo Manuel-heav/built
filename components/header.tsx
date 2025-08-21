@@ -26,12 +26,12 @@ const Header = () => {
           <div className="flex items-center gap-5">
             {!session ? (
               <Link href="/auth/sign-in">
-                <button className="btn-primary">Sign In</button>
+                <button className="btn-primary" data-umami-event="Sign In Button">Sign In</button>
               </Link>
             ) : (
               <div>
                 <Link href="/project-form" className="hidden md:block">
-                  <button className="btn-primary">Post Your Project</button>
+                  <button className="btn-primary" data-umami-event="Post Project Button">Post Your Project</button>
                 </Link>
                 <Link href="/project-form" className="md:hidden">
                   <button className="btn-primary flex items-center gap-2">
@@ -46,9 +46,10 @@ const Header = () => {
               className="flex gap-2 items-center border px-4 py-2 rounded-full cursor-pointer transition duration-1000 hover:shadow-[0_0_50px_15px_rgba(255,255,255,0.1),0_0_100px_40px_rgba(255,255,255,0.1)]"
               href="https://github.com/Manuel-heav/built"
               target="_blank"
-            >
+              data-umami-event="Star Button"
+              >
               <GithubIcon />
-              <p className="hidden md:block">Star</p>
+              <p className="hidden md:block" >Star</p>
             </Link>
             {session && (
               <div

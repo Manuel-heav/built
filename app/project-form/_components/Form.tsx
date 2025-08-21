@@ -344,6 +344,7 @@ export default function ProjectSubmissionForm() {
               type="submit"
               className="disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-lg w-full bg-white text-[#3a3a43] cursor-pointer transition duration-700 hover:shadow-[0_0_50px_15px_rgba(255,255,255,0.1),0_0_100px_40px_rgba(255,255,255,0.1)]"
               disabled={isSubmitting || imageUploading}
+              data-umami-event="Submit Project Button"
             >
               {isSubmitting ? <Spinner size="small" /> : "Submit Project"}
             </button>
