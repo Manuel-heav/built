@@ -26,7 +26,7 @@ export default function RootLayout({
         <GoogleAnalytics gaId="G-YLFT1NCPY2" />
         <Script
           defer
-          src="http://78.46.246.10:4000/script.js"
+          src="https://analytics.theblogrammer.com/script.js"
           data-website-id="c39655af-d491-479b-9add-e3f723e8da55"
         />
         <LogLib
