@@ -83,11 +83,11 @@ export default function ProjectEditForm({project_id}: {project_id:string}) {
     defaultValues: {
       title: project?.title || '',
       description: project?.description || '',
-      image_url: project?.image_url || '',
+      imageUrl: project?.imageUrl || '',
       tags: project?.tags || [],
-      github_repo: project?.github_repo || '',
-      live_demo:project?.live_demo || '',
-      telegram_channel: project?.telegram_channel || '',
+      githubRepo: project?.githubRepo || '',
+      liveDemo:project?.liveDemo || '',
+      telegramChannel: project?.telegramChannel || '',
       documentation: project?.documentation || '',
     },
   });
@@ -97,14 +97,14 @@ export default function ProjectEditForm({project_id}: {project_id:string}) {
       form.reset({
         title: project.title,
         description: project.description,
-        image_url: project.image_url,
+        imageUrl: project.imageUrl,
         tags: project.tags,
-        github_repo: project.github_repo,
-        live_demo: project.live_demo,
-        telegram_channel: project.telegram_channel,
+        githubRepo: project.githubRepo,
+        liveDemo: project.liveDemo,
+        telegramChannel: project.telegramChannel,
         documentation: project.documentation,
       });
-      setImagePreview(project?.image_url)
+      setImagePreview(project?.imageUrl)
     }
   }, [project]);
 
@@ -113,7 +113,7 @@ export default function ProjectEditForm({project_id}: {project_id:string}) {
     setSubmitError(null);
     const projectValues = {
       ...values,
-      user_id: session?.user.id,
+      userId: session?.user.id,
     };
 
     try {
@@ -155,7 +155,7 @@ export default function ProjectEditForm({project_id}: {project_id:string}) {
       const reader = new FileReader();
       reader.onloadend = async () => {
         setImagePreview(reader.result as string);
-        form.setValue("image_url", URL.createObjectURL(file));
+        form.setValue("imageUrl", URL.createObjectURL(file));
 
         const bucket = "projects";
         const randomFileName = `${Date.now()}-${file.name}`;
@@ -173,7 +173,7 @@ export default function ProjectEditForm({project_id}: {project_id:string}) {
           .from(bucket)
           .getPublicUrl(randomFileName);
 
-        form.setValue("image_url", fileUrl.data.publicUrl);
+        form.setValue("imageUrl", fileUrl.data.publicUrl);
         toast("Upload complete!");
       };
       reader.readAsDataURL(file);
@@ -224,7 +224,7 @@ export default function ProjectEditForm({project_id}: {project_id:string}) {
             />
             <FormField
               control={form.control}
-              name="image_url"
+              name="imageUrl"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-white">Thumbnail</FormLabel>
@@ -293,7 +293,7 @@ export default function ProjectEditForm({project_id}: {project_id:string}) {
             />
             <FormField
               control={form.control}
-              name="github_repo"
+              name="githubRepo"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-white">
@@ -312,7 +312,7 @@ export default function ProjectEditForm({project_id}: {project_id:string}) {
             />
             <FormField
               control={form.control}
-              name="live_demo"
+              name="liveDemo"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-white">Live Demo</FormLabel>
@@ -329,7 +329,7 @@ export default function ProjectEditForm({project_id}: {project_id:string}) {
             />
             <FormField
               control={form.control}
-              name="telegram_channel"
+              name="telegramChannel"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-white">

@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import React, { useState, useMemo, useEffect } from "react";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInView } from "react-intersection-observer";
 import Container from "./container";
 import ProjectCard from "./project-card";
 import ProjectFilter from "./project-filter";
@@ -9,7 +10,6 @@ import { ProjectType } from "@/types";
 import { authClient } from "@/lib/auth-client";
 import {
   MagnifyingGlassIcon,
-  ChatBubbleLeftIcon,
 } from "@heroicons/react/16/solid";
 import { Button } from "./ui/button";
 import {
@@ -21,23 +21,23 @@ import {
 import {
   ArrowUpWideNarrowIcon,
   ArrowDownWideNarrowIcon,
-  ThumbsUp,
 } from "lucide-react";
 import NothingHere from "./nothing-here";
 
 const SkeletonProjectCard = () => (
   <div className="animate-pulse">
-    <div className="bg-muted h-48 w-full mb-4 rounded-lg"></div>
-    <div className="h-4 bg-muted w-3/4 mb-2 rounded"></div>
-    <div className="h-4 bg-muted w-1/2 rounded"></div>
+    <div className="bg-gray-500 h-48 w-full mb-4 rounded-lg"></div>
+    <div className="h-4 bg-gray-500 w-3/4 mb-2 rounded"></div>
+    <div className="h-4 bg-gray-500 w-1/2 rounded"></div>
   </div>
 );
 
-const fetchProjects = async () => {
-  const response = await fetch(`/api/projects`);
-  console.log(response);
+const fetchProjectsPage = async (cursor: string | null) => {
+  const params = new URLSearchParams();
+  if (cursor) params.set("cursor", cursor);
+  const response = await fetch(`/api/projects?${params.toString()}`);
   if (!response.ok) throw new Error("Failed to fetch projects");
-  return response.json();
+  return response.json() as Promise<{ projects: ProjectType[]; nextCursor: string | null }>;
 };
 
 const fetchLikedProjects = async (userId: string) => {
@@ -50,23 +50,40 @@ const ProjectsContainer = () => {
   const { data: session } = authClient.useSession();
   const userId = session?.user.id;
 
-  const { data: projectsData, status: projectsStatus } = useQuery({
+  const { ref, inView } = useInView();
+
+  const {
+    data: projectsPages,
+    status: projectsStatus,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: ["projects"],
-    queryFn: fetchProjects,
+    queryFn: ({ pageParam }) => fetchProjectsPage(pageParam ?? null),
+    initialPageParam: null as string | null,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
 
-  const { data: likedProjectsData, isLoading: isLikedLoading } = useQuery({
+  const { data: likedProjectsData } = useQuery({
     queryKey: ["likedProjects", userId],
     queryFn: () => fetchLikedProjects(userId!),
     enabled: !!userId,
     staleTime: 5 * 60 * 1000,
   });
 
+
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<string>("");
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const likedProjectIds = useMemo(() => {
     if (!likedProjectsData) return new Set();
@@ -75,14 +92,19 @@ const ProjectsContainer = () => {
     );
   }, [likedProjectsData]);
 
-  const filteredProjects = useMemo(() => {
-    if (!projectsData?.projects) return [];
+  const allProjects = useMemo(() => {
+    const pages = projectsPages?.pages ?? [];
+    return pages.flatMap((p) => p.projects) as ProjectType[];
+  }, [projectsPages]);
 
-    let projects = [...projectsData.projects];
+  const filteredProjects = useMemo(() => {
+    if (!allProjects.length) return [];
+
+    let projects = [...allProjects];
 
     projects.sort(
       (a: ProjectType, b: ProjectType) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
 
     if (selectedTag) {
@@ -96,36 +118,28 @@ const ProjectsContainer = () => {
         project.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-
+  
     if (sortOrder === "asc" || sortOrder === "desc") {
       projects.sort((a: ProjectType, b: ProjectType) =>
         sortOrder === "asc" ? a.likes - b.likes : b.likes - a.likes
       );
-    } else if (sortOrder === "comments-asc" || sortOrder === "comments-desc") {
-      projects.sort((a: ProjectType, b: ProjectType) =>
-        sortOrder === "comments-asc"
-          ? a.comments - b.comments
-          : b.comments - a.comments
-      );
     }
-
+  
     return projects;
-  }, [projectsData, selectedTag, searchQuery, sortOrder]);
+  }, [allProjects, selectedTag, searchQuery, sortOrder]);
 
   return (
-    <div id="projects" className="bg-background">
+    <div id="projects">
       <Container>
         <div className="flex items-center gap-5 mb-6">
           <div className="flex gap-2">
             {/* Search Bar */}
-            <div className="flex items-center gap-2 border-2 border-border rounded-md px-2 py-1 focus-within:border-primary transition-colors duration-200">
-              <MagnifyingGlassIcon className="h-5 text-muted-foreground" />
+            <div className="flex items-center gap-2 border-2 border-[#616165] rounded-md px-2 py-1 focus-within:border-white transition-colors duration-200">
+              <MagnifyingGlassIcon className="h-5" />
               <input
                 type="text"
-                placeholder={`Search from ${
-                  projectsData?.projects.length || 0
-                } projects`}
-                className="bg-transparent text-foreground focus:outline-none text-sm placeholder:text-muted-foreground"
+                placeholder={"Search projects"}
+                className="bg-transparent text-[#f0f0f0] focus:outline-none text-sm"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -135,33 +149,22 @@ const ProjectsContainer = () => {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-
-                  className="bg-background hover:bg-accent text-foreground hover:text-accent-foreground border-border"
+                  className="bg-transparent text-[#85868d] border-[#616165]"
                 >
-                  <p className="hidden md:flex text-foreground">Sort by</p>
-                  {sortOrder.includes("asc") ? (
-                    <ArrowUpWideNarrowIcon className="ml-2 h-6 w-6 text-foreground" />
+                  <p className="hidden md:flex">Sort by Likes</p>
+                  {sortOrder === "asc" ? (
+                    <ArrowUpWideNarrowIcon className="ml-2 h-6 w-6" />
                   ) : (
-                    <ArrowDownWideNarrowIcon className="ml-2 h-6 w-6 text-foreground" />
+                    <ArrowDownWideNarrowIcon className="ml-2 h-6 w-6" />
                   )}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-popover border-border">
-                <DropdownMenuItem onClick={() => setSortOrder("asc")} className="text-popover-foreground hover:bg-accent hover:text-accent-foreground">
-                  <ThumbsUp className="h-5 w-5 mr-2" />
-                  Likes Ascending
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setSortOrder("asc")}>
+                  Ascending
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSortOrder("desc")} className="text-popover-foreground hover:bg-accent hover:text-accent-foreground">
-                  <ThumbsUp className="h-5 w-5 mr-2" />
-                  Likes Descending
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSortOrder("comments-asc")} className="text-popover-foreground hover:bg-accent hover:text-accent-foreground">
-                  <ChatBubbleLeftIcon className="h-5 w-5 mr-2" />
-                  Comments Ascending
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSortOrder("comments-desc")} className="text-popover-foreground hover:bg-accent hover:text-accent-foreground">
-                  <ChatBubbleLeftIcon className="h-5 w-5 mr-2" />
-                  Comments Descending
+                <DropdownMenuItem onClick={() => setSortOrder("desc")}>
+                  Descending
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -178,7 +181,7 @@ const ProjectsContainer = () => {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 py-6">
-          {projectsStatus === "pending" || isLikedLoading
+          {projectsStatus === "pending"
             ? Array(6)
                 .fill(0)
                 .map((_, idx) => <SkeletonProjectCard key={idx} />)
@@ -189,6 +192,16 @@ const ProjectsContainer = () => {
                   isLiked={likedProjectIds.has(project.id)}
                 />
               ))}
+        </div>
+        <div className="flex justify-center py-4">
+          <button
+            ref={ref}
+            className="text-sm text-[#85868d] border border-[#616165] rounded px-3 py-1"
+            disabled={!hasNextPage || isFetchingNextPage}
+            onClick={() => fetchNextPage()}
+          >
+            {isFetchingNextPage ? "Loading more..." : hasNextPage ? "Load more" : "No more projects"}
+          </button>
         </div>
       </Container>
     </div>

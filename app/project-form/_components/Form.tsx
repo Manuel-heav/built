@@ -21,12 +21,12 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
-import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { formSchema } from "@/schema";
 import { TagTypes } from "@/types";
 import { tags } from "@/constants";
+import { uploadImage } from "@/lib/minio";
 
 const TagButton = ({
   tag,
@@ -68,11 +68,11 @@ export default function ProjectSubmissionForm() {
     defaultValues: {
       title: "",
       description: "",
-      image_url: "",
+      imageUrl: "",
       tags: [],
-      github_repo: "",
-      live_demo: "",
-      telegram_channel: "",
+      githubRepo: "",
+      liveDemo: "",
+      telegramChannel: "",
       documentation: "",
     },
   });
@@ -82,9 +82,9 @@ export default function ProjectSubmissionForm() {
     setSubmitError(null);
     const projectValues = {
       ...values,
-      telegram_channel: values.telegram_channel ? `https://t.me/${values.telegram_channel.replace('@', '')}` : null,
-      user_id: session?.user.id,
-      user_name: session?.user.name
+      telegramChannel: values.telegramChannel ? `https://t.me/${values.telegramChannel.replace('@', '')}` : null,
+      userId: session?.user.id,
+      userName: session?.user.name
     };
 
     try {
@@ -128,29 +128,17 @@ export default function ProjectSubmissionForm() {
       toast("Uploading...");
       const reader = new FileReader();
       reader.onloadend = async () => {
-        setImagePreview(reader.result as string);
-        form.setValue("image_url", URL.createObjectURL(file));
-
-        const bucket = "projects";
-        const randomFileName = `${Date.now()}-${file.name}`;
-
-        const { error } = await supabase.storage
-          .from(bucket)
-          .upload(randomFileName, file);
-
-        if (error) {
-          alert("Error uploading file.");
+        try {
+          setImagePreview(reader.result as string);
+          const { publicUrl } = await uploadImage(file, session?.user.id || "anonymous", file.name);
+          form.setValue("imageUrl", publicUrl);
+          toast("Upload complete!");
+        } catch (error) {
+          console.error("Error uploading image:", error);
+          toast("Failed to upload image. Please try again.");
+        } finally {
           setImageUploading(false);
-          return;
         }
-
-        const fileUrl = await supabase.storage
-          .from(bucket)
-          .getPublicUrl(randomFileName);
-
-        form.setValue("image_url", fileUrl.data.publicUrl);
-        toast("Upload complete!");
-        setImageUploading(false);
       };
       reader.readAsDataURL(file);
     }
@@ -200,7 +188,7 @@ export default function ProjectSubmissionForm() {
             />
             <FormField
               control={form.control}
-              name="image_url"
+              name="imageUrl"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-white">Thumbnail</FormLabel>
@@ -269,7 +257,7 @@ export default function ProjectSubmissionForm() {
             />
             <FormField
               control={form.control}
-              name="github_repo"
+              name="githubRepo"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-white">
@@ -288,7 +276,7 @@ export default function ProjectSubmissionForm() {
             />
             <FormField
               control={form.control}
-              name="live_demo"
+              name="liveDemo"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-white">Live Demo</FormLabel>
@@ -305,7 +293,7 @@ export default function ProjectSubmissionForm() {
             />
             <FormField
               control={form.control}
-              name="telegram_channel"
+              name="telegramChannel"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-white">
@@ -356,6 +344,7 @@ export default function ProjectSubmissionForm() {
               type="submit"
               className="disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-lg w-full bg-white text-[#3a3a43] cursor-pointer transition duration-700 hover:shadow-[0_0_50px_15px_rgba(255,255,255,0.1),0_0_100px_40px_rgba(255,255,255,0.1)]"
               disabled={isSubmitting || imageUploading}
+              data-umami-event="Submit Project Button"
             >
               {isSubmitting ? <Spinner size="small" /> : "Submit Project"}
             </button>

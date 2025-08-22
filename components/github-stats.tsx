@@ -14,14 +14,14 @@ import {
 import axios from "axios";
 import { RepoStats } from "@/types";
 
-export default function GithubStats({ github_repo }: { github_repo: string }) {
+export default function GithubStats({ githubRepo }: { githubRepo: string }) {
   const [repoStats, setRepoStats] = useState<RepoStats | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   useEffect(() => {
-    const repoPath = github_repo.replace("https://github.com/", "");
+    const repoPath = githubRepo.replace("https://github.com/", "");
     const [owner, repo] = repoPath.split("/");
 
     const fetchRepoStats = async () => {
@@ -63,7 +63,7 @@ export default function GithubStats({ github_repo }: { github_repo: string }) {
     };
 
     fetchRepoStats();
-  }, [github_repo]);
+  }, [githubRepo]);
 
   if (error)
     return (
@@ -93,12 +93,12 @@ export default function GithubStats({ github_repo }: { github_repo: string }) {
         repoStats && (
           <>
             <a
-              href={github_repo}
+              href={githubRepo}
               target="_blank"
               rel="noopener noreferrer"
               className="text-custom-200 hover:text-white transition-colors duration-200 md:text-base text-sm "
             >
-              {github_repo}
+              {githubRepo}
             </a>
             <p className="md:text-base text-sm mt-2 text-white">
               {repoStats.description}

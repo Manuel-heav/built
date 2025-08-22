@@ -113,8 +113,8 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
           <div className="md:w-3/5">
             <img
               src={
-                project.image_url
-                  ? project.image_url
+                project.imageUrl
+                  ? project.imageUrl
                   : "https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled.png"
               }
               alt={`Project ${project.title}`}
@@ -125,11 +125,11 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
           <div className="flex flex-col justify-center md:w-1/3">
             <div>
                 
-              {project.user_id === session?.user.id && (
+              {project.userId === session?.user.id && (
                 <div className="flex gap-10">
                   <Link href={`/edit-form/${project.id}`}>
                     <div className="flex gap-1 pb-3">
-                      <EditIcon className="text-muted-foreground h-5" />
+                      <EditIcon className="text-gray-500 h-5" />
                       <p className="text-gray-500 text-sm">Edit Project</p>
                     </div>
                   </Link>
@@ -142,7 +142,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
                     </DialogTrigger>
                     <DialogContent className="bg-[#1c1c21] text-gray-300 border-none">
                       <DialogHeader>
-                        <DialogTitle className="text-foreground py-2">Are you absolutely sure?</DialogTitle>
+                        <DialogTitle className="text-white py-2">Are you absolutely sure?</DialogTitle>
                         <DialogDescription className="text-gray-300">
                           This action cannot be undone. This will permanently
                           delete your project and remove your data from our
@@ -156,17 +156,17 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
                   </Dialog>
                 </div>
               )}
-              <h2 className="text-2xl font-bold text-foreground">{project.title}</h2>
+              <h2 className="text-2xl font-bold">{project.title}</h2>
               <p className="text-gray-500 mt-2">{project.description}</p>
               <div>
-                    <p className="text-gray-300 text-xs pt-4">⚒️ {project.user_name}</p>
+                    <p className="text-gray-300 text-xs pt-4">⚒️ {project.userName}</p>
                 </div>
               {project.tags && project.tags.length > 0 && (
                 <div className="flex gap-2 mt-4">
                   {project.tags.map((tag, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 bg-transparent text-xs rounded-lg text-foreground border-[#7e7c7c] border-[1px]"
+                      className="px-3 py-1 bg-transparent text-xs rounded-lg text-white border-[#7e7c7c] border-[1px]"
                     >
                       {tag}
                     </span>
@@ -176,22 +176,20 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
             </div>
 
             <div className="flex gap-3 mt-4">
-              {project.github_repo && (
+              {project.githubRepo && (
                 <Link
-                  href={project.github_repo}
+                  href={project.githubRepo}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-foreground"
                 >
                   <GithubIcon />
                 </Link>
               )}
-              {project.telegram_channel && (
+              {project.telegramChannel && (
                 <Link
-                  href={project.telegram_channel}
+                  href={project.telegramChannel}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-foreground"
                 >
                   <TelegramIcon />
                 </Link>
@@ -200,12 +198,13 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
 
             <div className="mt-5 flex gap-2">
               <Link
-                href={project.live_demo}
+                href={project.liveDemo}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-foreground hover:text-white transition-colors"
+                className="text-gray-600 hover:text-white transition-colors"
               >
-<Button className=" text-foreground bg-background border-border border hover:scale-105 hover:bg-white hover:text-black transition duration-200">                  Live Demo
+                <Button className="border-gray-600 border-2 hover:scale-105 transition duration-200">
+                  Live Demo
                 </Button>
               </Link>
               {project.documentation && (
@@ -214,7 +213,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Button className="text-foreground bg-background border-border border hover:scale-105 hover:bg-white hover:text-black transition duration-200">
+                  <Button className="bg-white text-black hover:scale-105 hover:bg-white hover:text-black transition duration-200">
                     See Docs
                   </Button>
                 </Link>
@@ -224,7 +223,7 @@ const SingleProject = ({ params }: ProjectDetailPageProps) => {
           </div>
         </div>
         <div>
-          <GithubStats github_repo={project.github_repo} />
+          <GithubStats githubRepo={project.githubRepo} />
         </div>
         <div className="mt-6">
           <CommentSection projectId={project.id} />

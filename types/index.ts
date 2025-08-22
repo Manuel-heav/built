@@ -4,18 +4,18 @@ export interface TagTypes {
 }
 
 export interface ProjectType {
-  created_at: Date;
-  user_id: string;
+  createdAt: Date;
+  userId: string;
   documentation: string;
   description: string;
-  user_name: string;
+  userName: string;
   id: string;
-  image_url: string;
+  imageUrl: string;
   title: string;
   tags: string[];
-  github_repo: string;
-  live_demo: string;
-  telegram_channel: string;
+  githubRepo: string;
+  liveDemo: string;
+  telegramChannel: string;
   likes: number;
   comments: number;
 }
