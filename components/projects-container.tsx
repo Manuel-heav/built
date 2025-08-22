@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import React, { useState, useMemo, useEffect } from "react";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInView } from "react-intersection-observer";
 import Container from "./container";
 import ProjectCard from "./project-card";
 import ProjectFilter from "./project-filter";
@@ -31,11 +32,12 @@ const SkeletonProjectCard = () => (
   </div>
 );
 
-const fetchProjects = async () => {
-  const response = await fetch(`/api/projects`);
-  console.log(response);
+const fetchProjectsPage = async (cursor: string | null) => {
+  const params = new URLSearchParams();
+  if (cursor) params.set("cursor", cursor);
+  const response = await fetch(`/api/projects?${params.toString()}`);
   if (!response.ok) throw new Error("Failed to fetch projects");
-  return response.json();
+  return response.json() as Promise<{ projects: ProjectType[]; nextCursor: string | null }>;
 };
 
 const fetchLikedProjects = async (userId: string) => {
@@ -48,14 +50,24 @@ const ProjectsContainer = () => {
   const { data: session } = authClient.useSession();
   const userId = session?.user.id;
 
-  const { data: projectsData, status: projectsStatus } = useQuery({
+  const { ref, inView } = useInView();
+
+  const {
+    data: projectsPages,
+    status: projectsStatus,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: ["projects"],
-    queryFn: fetchProjects,
+    queryFn: ({ pageParam }) => fetchProjectsPage(pageParam ?? null),
+    initialPageParam: null as string | null,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
 
-  const { data: likedProjectsData, isLoading: isLikedLoading } = useQuery({
+  const { data: likedProjectsData } = useQuery({
     queryKey: ["likedProjects", userId],
     queryFn: () => fetchLikedProjects(userId!),
     enabled: !!userId,
@@ -67,6 +79,12 @@ const ProjectsContainer = () => {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<string>("");
 
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
   const likedProjectIds = useMemo(() => {
     if (!likedProjectsData) return new Set();
     return new Set(
@@ -74,12 +92,15 @@ const ProjectsContainer = () => {
     );
   }, [likedProjectsData]);
 
-  console.log(likedProjectIds);
+  const allProjects = useMemo(() => {
+    const pages = projectsPages?.pages ?? [];
+    return pages.flatMap((p) => p.projects) as ProjectType[];
+  }, [projectsPages]);
 
   const filteredProjects = useMemo(() => {
-    if (!projectsData?.projects) return [];
+    if (!allProjects.length) return [];
 
-    let projects = [...projectsData.projects];
+    let projects = [...allProjects];
 
     projects.sort(
       (a: ProjectType, b: ProjectType) =>
@@ -105,7 +126,7 @@ const ProjectsContainer = () => {
     }
   
     return projects;
-  }, [projectsData, selectedTag, searchQuery, sortOrder]);
+  }, [allProjects, selectedTag, searchQuery, sortOrder]);
 
   return (
     <div id="projects">
@@ -117,9 +138,7 @@ const ProjectsContainer = () => {
               <MagnifyingGlassIcon className="h-5" />
               <input
                 type="text"
-                placeholder={`Search from ${
-                  projectsData?.projects.length || 0
-                } projects`}
+                placeholder={"Search projects"}
                 className="bg-transparent text-[#f0f0f0] focus:outline-none text-sm"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -162,7 +181,7 @@ const ProjectsContainer = () => {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 py-6">
-          {projectsStatus === "pending" || isLikedLoading
+          {projectsStatus === "pending"
             ? Array(6)
                 .fill(0)
                 .map((_, idx) => <SkeletonProjectCard key={idx} />)
@@ -173,6 +192,16 @@ const ProjectsContainer = () => {
                   isLiked={likedProjectIds.has(project.id)}
                 />
               ))}
+        </div>
+        <div className="flex justify-center py-4">
+          <button
+            ref={ref}
+            className="text-sm text-[#85868d] border border-[#616165] rounded px-3 py-1"
+            disabled={!hasNextPage || isFetchingNextPage}
+            onClick={() => fetchNextPage()}
+          >
+            {isFetchingNextPage ? "Loading more..." : hasNextPage ? "Load more" : "No more projects"}
+          </button>
         </div>
       </Container>
     </div>
